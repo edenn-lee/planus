@@ -1,123 +1,209 @@
-import React, { useState, useEffect } from 'react';
+import  {React, useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import AddEventModal from './AddEventModal';
 import EventDetailModal from './EventDetailModal.js';
 import axios from 'axios';
+import NotificationButton from './NotificationButton';
+import Notification from './Notification';
 
-const API_URL = 'http://15.165.204.96:8080/api/schedules';
 
 function MyCalendar() {
+
+  const API_CALENDAR = 'http://15.165.204.96:8080/api/schedules';
+  const API_USER = 'http://15.165.204.96:8080/api/schedules/user';
+  
 
   const [events, setEvents] = useState([]);
   const [showAddEventModal, setShowAddEventModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showEventDetailModal, setShowEventDetailModal] = useState(false);
+  // const [notificationOpen, setNotificationOpen] = useState(false);
+  const [isAccepted, setisAccepted] = useState(false);
 
+
+  // const handleNotificationToggle = () => {
+  //     // setNotificationOpen(!notificationOpen);
+  //     setNotificationOpen(!notificationOpen);
+  //     console.log(notificationOpen);
+  //   };
   
-  const currentDate = new Date();
-  const currentMonth = currentDate.toLocaleString('default', { month: 'long' });
+  //   const handleNotificationClose = () => {
+  //     setNotificationOpen(false);
+  //   };
+
+
+  const token = localStorage.getItem('token');
 
   const handleAddEventSubmit = (data) => {
-    console.log(events);
-    const processedEvent = {
-      ...data,
-      duration: data.start === data.end ? 1 : undefined
-    };
-  
-    axios.post(API_URL, data)
+    if(data.shared) {
+      console.log(data.shared);
+      axios.post(`http://15.165.204.96:8080/api/schedules/shared?sharedWithIds=${data.shared}`, data, {
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        }
+      })
       .then(response => {
-        console.log(data);
-        console.log(response);
-        const newEventId = response.data.id;
-        const newEvents = [...events, { ...data, id: newEventId }];
-        setEvents(newEvents);
+        
+        const newEvent = {
+          ...data,
+          id: response.data.id.toString(),
+          start: new Date(data.startDateTime),
+          end: new Date(data.endDateTime),
+          content: data.content
+        };
+        const updatedEvents = [...events, newEvent];
+        setEvents(updatedEvents);
         setShowAddEventModal(false);
+        console.log(events);
+      })
+      
+      .catch(error => {
+        console.error(error);
+      });
+    }
+    else{
+      console.log('nope');
+
+      axios.post(API_CALENDAR, data, {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      })
+      .then(response => {
+        console.log(data.shared);
+        const newEvent = {
+          ...data,
+          id: response.data.id.toString(),
+          start: new Date(data.startDateTime),
+          end: new Date(data.endDateTime),
+          content: data.content
+        };
+        const updatedEvents = [...events, newEvent];
+        setEvents(updatedEvents);
+        
+        setShowAddEventModal(false);
+        
       })
       .catch(error => {
         console.error(error);
       });
-
-      console.log(events);
+    }
   };
-  
-  // const createEvent = (event) => {
-  //   const newEventId = event.id;
-  //   const newEvents = [...events, { ...event, id: newEventId }];
-  //   setEvents(newEvents);
-  // };
 
-  // const processedEvents = events.map((event) => {
-  //   if (event.start === event.end) {
-  //     return { ...event, duration: 1 };
-  //   }
-  //   return event;
-  // });
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(API_URL);
-        setEvents(response.data);
-        console.log(response.data);
-        console.log(events);
-      } catch (error) {
-        console.error(error);
+  const eventsUpdate = () => {
+    axios.get(API_USER,{
+      headers: {
+        'Authorization': 'Bearer ' + token,
       }
-    };
-    fetchData();
-    // console.log(events)
-    setShowEventDetailModal(false);
-  }, []);
+    })
+    .then(response => {
+      const getEvents = response.data.map(event => ({
+        ...event,
+        id: event.id.toString(),
+        // start: event.startDateTime,
+        start: new Date(event.startDateTime[0], event.startDateTime[1] - 1, event.startDateTime[2], event.startDateTime[3], event.startDateTime[4]),
+        // end: event.endDateTime,
+        end: new Date(event.endDateTime[0], event.endDateTime[1] - 1, event.endDateTime[2], event.endDateTime[3], event.endDateTime[4]),
+        title: event.title,
+        content: event.content,
+      }));
+      
+      setEvents(getEvents);
+
+    })
+    .catch(error => console.log(error));
+  }
+
+useEffect(() => {
+  eventsUpdate();
+  // console.log(events);
+}, [events]);
 
   const handleEventClick = (clickInfo) => {
     const eventId = clickInfo.event.id;
-    const event = events.find(event => event.id == eventId);
+    const event = events.find(event => event.id === eventId);
+  
     if (!event) {
-     console.log("야 이거 또 안된다") // event가 undefined일 때 처리할 내용
+      console.log("Could not find event with id", eventId);
+      return;
     }
-    else console.log("야 이건 되는데?")
+    setSelectedEvent(event);
+    setShowEventDetailModal(true);
+  };
+  
 
-    // console.log(event);
-    console.log(event);
-    console.log(events);
-    if (event) {
-      setShowEventDetailModal(true);
-      setSelectedEvent(event);
-    } else {
-      console.log(`Could not find event with id ${eventId}`);
-      // console.log(clickInfo.event.id);
+const handleEditClick = (event) => {
+  // Edit 버튼을 클릭한 이벤트를 API로 수정 요청하는 코드 작성 
+  axios.put(`${API_CALENDAR}/${event.id}`, event, {
+    headers: {
+      'Authorization': 'Bearer ' + token
     }
-  }
+  })
+  .then(response => {
+    // 수정한 이벤트 데이터로 이벤트 목록 상태 업데이트 
+    setEvents(prevState => {
+      const index = prevState.findIndex(e => e.id === event.id);
+      prevState[index] = event;
+      return [...prevState];
+    });
+    // saveEventsToLocalStorage([...events]); // 로컬 스토리지에 저장
+    setSelectedEvent(event);
+  })
+  .catch(error => {
+    console.error(error);
+  });
+};
 
+const handleDeleteClick = (event) => {
+  // Delete 버튼을 클릭한 이벤트를 API로 삭제 요청하는 코드 작성 
+  axios.delete(`${API_CALENDAR}/${event.id}`, {
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
+  })
+  .then(response => {
+    // 삭제한 이벤트를 제외한 이벤트 목록으로 상태 업데이트 
+    const newEvents = events.filter(e => e.id !== event.id);
+    setEvents(newEvents);
+    // saveEventsToLocalStorage(newEvents); // 로컬 스토리지에 저장
+    setSelectedEvent(null);
+    setShowEventDetailModal(false);
+  })
+  .catch(error => {
+    console.error(error);
+  });
+};
+
+  
   const calendarOptions = {
-    headerToolbar: {
-      left : "prev,next today",
-      center: 'title',
-      right: "addEventButton",
-    },
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'addEventButton',
+        },
     
-    customButtons: {
-      addEventButton: {
-        text: "일정 추가",
-        click: () => setShowAddEventModal(true),
-      }
-    },
-
-    titleFormat: {
-      month:"long"
-    },
+        customButtons: {
+          addEventButton: {
+            text: '일정 추가',
+            click: () => setShowAddEventModal(true),
+          },
+        },
     
-    eventClick: handleEventClick
-  }
+        titleFormat: {
+          month: 'long',
+        },
+    
+        eventClick: handleEventClick,
+        events: events,
+      };
 
   return (
     <>
       <FullCalendar
         plugins={[dayGridPlugin]}
-        events={events}
         {...calendarOptions}
-        style={{ height: "100%", width: "100%" }}
+        style={{ height: '100%', width: '100%' }}
       />
 
       {showAddEventModal && (
@@ -130,10 +216,14 @@ function MyCalendar() {
 
       {showEventDetailModal && selectedEvent && (
         <EventDetailModal
-         
-          event={selectedEvent}
-          onClose={() => setShowEventDetailModal(false)}
-        />
+        event={selectedEvent}
+        onClose={() => setShowEventDetailModal(false)}
+        onEditClick={handleEditClick}
+        onDeleteClick={handleDeleteClick}
+        show={showEventDetailModal}
+        events={events}
+        setEvents={setEvents}
+      />
       )}
     </>
   );
