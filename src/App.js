@@ -15,23 +15,20 @@ import RegisterPage from './components/RegisterPage';
 import axios from 'axios';
 
 
-axios.defaults.baseURL = 'http://15.165.204.96:8080/api'; // 백엔드 API의 기본 URL 설정
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+// axios.defaults.baseURL = 'http://13.209.48.48:8080/api'; // 백엔드 API의 기본 URL 설정
+// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
 
-// var express = require('express');
-// var cors = require('cors')
-// var app = express()
+const express = require('express');
+const app = express();
 
-// app.use(cors())
-
-// app.get('/products/:id',function(req,res,next){
-//   res.json({msg:'This is CORS-enabled for all origins!'})
-// })
-
-// app.listen(80, function() {
-//   console.log('CORS-enabled web server listning on poirt 80')
-// })
+// CORS 설정
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
 
 
 function App() {

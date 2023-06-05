@@ -3,7 +3,7 @@ import axios from 'axios';
 
 function Group() {
   const token = localStorage.getItem('token');
-  const API_GROUP = 'http://15.165.204.96:8080/api/groups';
+  const API_GROUP = 'http://13.209.48.48:8080/api/groups';
 
   const [showGroupList, setShowGroupList] = useState(false);
   const [showAddGroup, setShowAddGroup] = useState(false);
@@ -31,7 +31,7 @@ function Group() {
   const handleAddGroupSubmit = (event) => {
     event.preventDefault();
 
-    axios.post(API_GROUP,{ groupName, memberIds },
+    axios.post(API_GROUP,{groupName},
         {
           headers: {
             Authorization: 'Bearer ' + token,

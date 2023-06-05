@@ -4,8 +4,8 @@ import axios from 'axios';
 
 
 
-const API_ACCEPT = 'http://15.165.204.96:8080/api/messages/accept'
-const API_MESSAGE_LIST = 'http://15.165.204.96:8080/api/messages/received'
+const API_ACCEPT = 'http://13.209.48.48:8080/api/messages/accept'
+const API_MESSAGE_LIST = 'http://13.209.48.48:8080/api/messages/received'
 
 
 
