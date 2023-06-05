@@ -31,7 +31,7 @@ function Group() {
   const handleAddGroupSubmit = (event) => {
     event.preventDefault();
 
-    axios.post(API_GROUP,{ groupName, memberIds },
+    axios.post(API_GROUP,{groupName},
         {
           headers: {
             Authorization: 'Bearer ' + token,
