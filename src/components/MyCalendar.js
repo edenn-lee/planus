@@ -10,8 +10,8 @@ import Notification from './Notification';
 
 function MyCalendar() {
 
-  const API_CALENDAR = 'http://15.165.204.96:8080/api/schedules';
-  const API_USER = 'http://15.165.204.96:8080/api/schedules/user';
+  const API_CALENDAR = 'http://13.209.48.48:8080/api/schedules';
+  const API_USER = 'http://13.209.48.48:8080/api/schedules/user';
   
 
   const [events, setEvents] = useState([]);
@@ -38,7 +38,7 @@ function MyCalendar() {
   const handleAddEventSubmit = (data) => {
     if(data.shared) {
       console.log(data.shared);
-      axios.post(`http://15.165.204.96:8080/api/schedules/shared?sharedWithIds=${data.shared}`, data, {
+      axios.post(`http://13.209.48.48:8080/api/schedules/shared?sharedWithIds=${data.shared}`, data, {
         headers: {
           'Authorization': 'Bearer ' + token,
         }

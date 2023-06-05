@@ -11,7 +11,7 @@ function LoginPage(props) {
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://15.165.204.96:8080/auth/login', {
+      const response = await axios.post('http://13.209.48.48:8080/auth/login', {
         email: email,
         password: password,
       }, );

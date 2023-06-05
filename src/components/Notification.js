@@ -14,7 +14,7 @@ function Notification({isOpen}) {
   // };
 
   return (
-    <div style={{display:'flex', left:'100%'}} className={`notification-container ${isOpen ? 'open' : ''}`}>
+    <div className={`notification-container ${isOpen ? 'open' : ''}`}>
       <NotificationList/>
     </div>
   );

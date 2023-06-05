@@ -20,7 +20,7 @@ const EventDetailModal = ({ show, event, onClose, onEditClick, onDeleteClick, ev
       const formData = new FormData();
       formData.append('image', imageFile);
 
-      const response = await axios.patch(`http://15.165.204.96:8080/api/schedules/image/${event.id}`, formData, {
+      const response = await axios.patch(`http://13.209.48.48:8080/api/schedules/image/${event.id}`, formData, {
         headers: {
           'Authorization': 'Bearer ' + token,
           'Content-Type': 'multipart/form-data',

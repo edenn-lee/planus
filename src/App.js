@@ -15,7 +15,7 @@ import RegisterPage from './components/RegisterPage';
 import axios from 'axios';
 
 
-axios.defaults.baseURL = 'http://15.165.204.96:8080/api'; // 백엔드 API의 기본 URL 설정
+axios.defaults.baseURL = 'http://13.209.48.48:8080/api'; // 백엔드 API의 기본 URL 설정
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
 

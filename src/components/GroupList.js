@@ -13,8 +13,11 @@ function GroupComponent() {
 
   const handleCreateGroup = (event) => {
     event.preventDefault();
-    axios
-      .post('http://15.165.204.96:8080/api/groups', { name: groupName })
+    await.axios
+      .post('http://13.209.48.48:8080/api/groups', { name: groupName },{
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        }})
       .then((response) => {
         setGroups([...groups, response.data]);
         setGroupName('');
@@ -27,7 +30,7 @@ function GroupComponent() {
 
   const handleDeleteGroup = (groupId) => {
     axios
-      .delete(`http://15.165.204.96:8080/api/groups/${groupId}`)
+      .delete(`http://13.209.48.48:8080/api/groups/${groupId}`)
       .then(() => {
         setGroups(groups.filter((group) => group.id !== groupId));
       })

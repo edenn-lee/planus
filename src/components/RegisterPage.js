@@ -11,7 +11,7 @@ function RegisterPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(email,password,nickname);
-    axios.post('http://15.165.204.96:8080/auth/signup', {
+    axios.post('http://13.209.48.48:8080/auth/signup', {
       email: email,
       password: password,
       nickname: nickname
