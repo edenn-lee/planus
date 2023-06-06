@@ -129,6 +129,11 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
     Personal(showPersonalSchedule);
   };
 
+  const checkDeleteGroupSubmit = (groupId) => {
+
+    handleDeleteGroupSubmit(groupId)
+  };
+
 {/* <button type="submit" onClick={handleDeleteGroupSubmit}>
                         삭제
                       </button> */}
@@ -173,7 +178,7 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
                         onChange={(event) => handleGroupCheckboxChange(event, group)}
                       />
                       {group.name}
-                      <button className="add-button" onClick={handleAddGroupClick}>
+                      <button className="add-button" onClick={checkDeleteGroupSubmit(group.Id)}>
                       삭제
                     </button>
                     </label>
