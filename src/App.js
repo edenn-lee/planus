@@ -19,16 +19,16 @@ axios.defaults.baseURL = 'http://13.209.48.48:8080/api'; // 백엔드 API의 기
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
 
-const express = require('express');
-const app = express();
+// const express = require('express');
+// const app = express();
 
 // CORS 설정
-app.use(function(req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
+// app.use(function(req, res, next) {
+//   res.setHeader('Access-Control-Allow-Origin', '*');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+//   next();
+// });
 
 
 function App() {

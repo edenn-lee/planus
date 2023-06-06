@@ -41,15 +41,15 @@ function Menu({ isOpen, onClose }) {
     console.log(groupName);
     console.log(memberIds);
   
-    const ids = memberIds.split(",").map(id => Number(id));
+    // const ids = memberIds.split(",").map(id => Number(id));
     // const members = ids.map(id => ({ id: id }));
     
     const data = {
-      name: groupName,
-      memberIds: ids
+      groupName: groupName
+      // memberIds: ids
     };
     console.log(data);
-    console.log(ids);
+    // console.log(ids);
    
     axios.post(API_GROUP, data, {
       headers: {
