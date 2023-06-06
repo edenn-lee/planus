@@ -1,6 +1,8 @@
 import { useEffect } from "react";
+import './KakaoShare.css';
 // kakao 기능 동작을 위해 넣어준다.
 const { Kakao } = window;
+
 
 export default () =>{
 	// 배포한 자신의 사이트
@@ -25,7 +27,7 @@ Kakao.Share.createDefaultButton({
     container: '#kakaotalk-sharing-btn',
     objectType: 'calendar',
     idType: 'event',
-    id: 123,
+    id: 'event1',
     content: {
       title: 'Planus',
       description: 'Planus에서 일정 공유에 초대합니다.',
@@ -44,18 +46,20 @@ Kakao.Share.createDefaultButton({
           mobileWebUrl: 'http://223.222.183.111:3000/login',
         },
       },
-    ],
+    ]
   });
 }
       
 return(
     <>
         <button 
+            id="kakaotalk-sharing-btn"
             className='grey-btn'
             onClick={() => {
                 shareKakao()
-            }}
-        > 카카오톡 공유하기 </button>
+            }}> 
+
+        카카오톡 공유하기 </button>
     </>
 )
 }

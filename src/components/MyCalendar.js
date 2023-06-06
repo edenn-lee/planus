@@ -50,7 +50,7 @@ function MyCalendar({ selectedGroup ,Groups,Personal}) {
       });
     }
     else if(data.groupId){
-      console.log("그룹공유");
+      console.log(data.groupId);
         axios.post(`http://13.209.48.48:8080//api/groups/${data.groupId}/schedules`, {
 
           title: data.title,
@@ -129,8 +129,10 @@ function MyCalendar({ selectedGroup ,Groups,Personal}) {
   }, []);
 
 useEffect(() => {
-  // console.log(Personal);
-  if(!Personal)
+  console.log("Personal")
+  console.log(Personal);
+  
+  if(Personal)
     eventsUpdate();
   else setEvents([]);
   // console.log(events);

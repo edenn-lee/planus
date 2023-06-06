@@ -39,7 +39,10 @@ function App() {
   const [isAccepted, setisAccepted] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [groups, setGroups] = useState([]);
-  const [showPersonalSchedule, setShowPersonalSchedule] = useState(true);
+  const [showPersonalSchedule, setShowPersonalSchedule] = useState();
+  const [isKakaoShare, setKakaoShare]= useState(false);
+
+
 
   const handleSelectGroup = (group) => {
     setSelectedGroup(group);
@@ -51,8 +54,13 @@ function App() {
   };
 
   const handlePersonalScheduleCheckboxChange = (personal) => {
-    setShowPersonalSchedule(personal);
+    setShowPersonalSchedule(!personal);
+    console.log(personal)
   };
+
+  useEffect(()=>{
+    console.log(showPersonalSchedule);
+  },[showPersonalSchedule])
 
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);

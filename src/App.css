@@ -117,10 +117,6 @@ ul.menu-content li a {
   /* margin-left: 3rem; */
 }
 
-.add-button {
- margin-left: 7rem;
-}
-
 .ReactModal__Content.ReactModal__Content--after-open.modal{
   backdrop-filter: none;
   /* background-color: rgba(0, 0, 0, 0.5); */
@@ -254,19 +250,29 @@ ul.menu-content li a {
   background-color: transparent;
 }
 
-/* .sub-menu-container li:before{
-margin-left: -1.5rem;
-content: "- ";
-
-} */
-
 .sub-menu-container {
+  /* display:flex;
+  flex-direction: column; */
   margin-bottom: 1rem;
 }
 
 .sub-menu-container li{
+  
   margin-left: -1.0rem;
   }
+
+.edit-button{
+  margin-bottom: 1rem;
+}
+
+.delete-button{
+  margin-bottom: 1rem;
+}
+
+.add-button{
+  margin-bottom: 1rem;
+  width:50%;
+}
 
 .sub-menu-container li input[type="checkbox"] {
   display: inline-block;

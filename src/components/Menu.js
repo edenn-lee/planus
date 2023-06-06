@@ -11,6 +11,8 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
   const [showGroupList, setShowGroupList] = useState(false);
   const [showAddGroup, setShowAddGroup] = useState(false);
   const [showEditGroup, setShowEditGroup] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showAddButton, setShowAddButton] = useState(true);
   const [groupName, setGroupName] = useState('');
   const [groups, setGroups] = useState([]);
   const [memberIds, setMemberIds] = useState([]);
@@ -18,6 +20,8 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
   const [schedules, setSchedules] = useState([]);
   const [showPersonalSchedule, setShowPersonalSchedule] = useState(true);
 
+
+  
   // useEffect(() => {
   //   if (selectedGroup) {
   //     // 선택한 그룹의 일정을 가져오는 함수
@@ -34,6 +38,11 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
 
   const handleAddGroupClick = () => {
     setShowAddGroup(!showAddGroup);
+    setShowAddButton(!showAddButton);
+  };
+
+  const handleAddButtonClick = () => {
+    setShowAddButton(!showAddButton);
   };
 
   const handleEditGroupClick = () => {
@@ -50,7 +59,7 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
 
   const handleAddGroupSubmit = (event) => {
     event.preventDefault();
-
+    
     const data = {
       name: groupName,
     };
@@ -61,34 +70,57 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
         },
       })
       .then((response) => {
-        const newGroup = {
-          name: response.data.name
-        };
+        console.log(response);
         setGroupName('');
         setShowAddGroup(false);
         setMemberIds('');
+        // LoadGroups();
+        setGroupMember(response.data.id);
+        // console.log(response.id)
+        
       })
       .catch((error) => {
         console.error(error);
       });
+      console.log("생성")
   };
+
+  const setGroupMember=(groupId)=>{
+    axios.post(`http://13.209.48.48:8080/api/groups/${groupId}/members`, {
+      id: localStorage.getItem('userId')
+    }, {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      },
+    })
+    .then((response) => {
+      LoadGroups();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+    console.log("생성")
+  }
+
 
   const handleDeleteGroupSubmit = (groupId) => {
   
-    axios.delete(`http://13.209.48.48:8080//api/groups/${groupId}`, {
+    axios.delete(`http://13.209.48.48:8080/api/groups/${groupId}`, {
         headers: {
           'Authorization': 'Bearer ' + token
         },
       })
       .then((response) => {
         LoadGroups();
+        setShowDeleteModal(false);
+        console.log("Delete 실행")
       })
       .catch((error) => {
         console.error(error);
       });
   };
-
-  const LoadGroups = () => {
+  
+    const LoadGroups = () => {
     axios
       .get("http://13.209.48.48:8080/api/groups/mygroups", {
         headers: {
@@ -96,10 +128,10 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
         },
       })
       .then((response) => {
-
+        console.log(localStorage.getItem('userId'))
         setGroups(response.data);
         Groups(response.data);
-        console.log(groups);
+        console.log(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -107,9 +139,9 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
   };
 
 
-// useEffect(()=>{
-//   LoadGroups();
-// },[])
+useEffect(()=>{
+  LoadGroups();
+},[])
 
   const handleGroupCheckboxChange = (event, group) => {
     if (event.target.checked) {
@@ -129,9 +161,14 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
     Personal(showPersonalSchedule);
   };
 
-  const checkDeleteGroupSubmit = (groupId) => {
 
-    handleDeleteGroupSubmit(groupId)
+  useEffect(()=>{
+    console.log(showPersonalSchedule);
+  },[showPersonalSchedule])
+
+
+  const checkDeleteGroupSubmit = () => {
+    setShowDeleteModal(true);
   };
 
 {/* <button type="submit" onClick={handleDeleteGroupSubmit}>
@@ -150,12 +187,12 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
           </NavLink>
         </li>
         <li>
-          <li onClick={handleGroupClick} style={{ padding: '0px', margin: '0px' }}>
+          <li onClick={()=>{handleGroupClick();LoadGroups();}} style={{ padding: '0px', margin: '0px' }}>
             Group
           </li>
           {showGroupList && (
             <div style={{ paddingLeft: '0px' }} className="sub-menu-container">
-              <button className="add-button" onClick={handleEditGroupClick}>
+              <button className="edit-button" onClick={handleEditGroupClick}>
                 편집
               </button>
               <ul style={{ paddingLeft: '1rem' }}>
@@ -178,17 +215,33 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
                         onChange={(event) => handleGroupCheckboxChange(event, group)}
                       />
                       {group.name}
-                      <button className="add-button" onClick={checkDeleteGroupSubmit(group.Id)}>
+                      
+                    </label>
+                    {showEditGroup && (
+                      <>
+                    <button className="delete-button" onClick={checkDeleteGroupSubmit}>
                       삭제
                     </button>
-                    </label>
+                      {showDeleteModal && (
+                        <div className="modal">
+                          <p>정말로 삭제하시겠습니까?</p>
+                          <button onClick={()=>handleDeleteGroupSubmit(group.id)}>삭제</button>
+                          <button onClick={()=>setShowDeleteModal(false)}>취소</button>
+                        </div>
+                      )}
+                    </>
+                    )}
                   </li>
+                  
                 ))}
                 {showEditGroup && (
-                  <div>
-                    <button className="add-button" onClick={handleAddGroupClick}>
-                      +
-                    </button>
+                  <div style={{ display: 'flex', flexDirection: "column",alignItems: 'center'}}>
+                      {showAddButton && (
+                        <button className="add-button" onClick={handleAddGroupClick}>
+                        그룹 추가
+                      </button>
+                      )}
+                      
                     {showAddGroup && (
                       <li style={{ marginTop: '-1rem' }}>
                         <form onSubmit={handleAddGroupSubmit}>
@@ -199,14 +252,8 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
                             onChange={handleGroupNameChange}
                             style={{ width: '150px' }}
                           />
-                          <input
-                            type="text"
-                            placeholder="Enter ID for share"
-                            value={memberIds}
-                            onChange={handleMemberIdsChange}
-                            style={{ width: '150px' }}
-                          />
-                          <button type="submit">생성</button>
+                          
+                          <button type="submit" onClick={()=>setShowAddButton(true)}>생성</button>
                           <button type="button" onClick={handleAddGroupClick}>
                             취소
                           </button>

@@ -9,6 +9,7 @@ const EventDetailModal = ({ show, event, onClose, onEditClick, onDeleteClick, ev
 
   const handleEditClick = () => {
     onEditClick(event);
+    console.log(event.Id);
   };
 
   const handleDeleteClick = () => {
