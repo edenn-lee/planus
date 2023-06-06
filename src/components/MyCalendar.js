@@ -8,36 +8,23 @@ import NotificationButton from './NotificationButton';
 import Notification from './Notification';
 
 
-function MyCalendar() {
+function MyCalendar({ selectedGroup ,Groups,Personal}) {
 
   const API_CALENDAR = 'http://13.209.48.48:8080/api/schedules';
-  const API_USER = 'http://13.209.48.48:8080/api/schedules/user';
-  
+  const API_USER = 'http://13.209.48.48:8080/api/schedules/user'
 
   const [events, setEvents] = useState([]);
   const [showAddEventModal, setShowAddEventModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showEventDetailModal, setShowEventDetailModal] = useState(false);
-  // const [notificationOpen, setNotificationOpen] = useState(false);
-  const [isAccepted, setisAccepted] = useState(false);
-
-
-  // const handleNotificationToggle = () => {
-  //     // setNotificationOpen(!notificationOpen);
-  //     setNotificationOpen(!notificationOpen);
-  //     console.log(notificationOpen);
-  //   };
   
-  //   const handleNotificationClose = () => {
-  //     setNotificationOpen(false);
-  //   };
-
+  const [isAccepted, setisAccepted] = useState(false);
 
   const token = localStorage.getItem('token');
 
   const handleAddEventSubmit = (data) => {
     if(data.shared) {
-      console.log(data.shared);
+      console.log("단일공유");
       axios.post(`http://13.209.48.48:8080/api/schedules/shared?sharedWithIds=${data.shared}`, data, {
         headers: {
           'Authorization': 'Bearer ' + token,
@@ -62,9 +49,29 @@ function MyCalendar() {
         console.error(error);
       });
     }
-    else{
-      console.log('nope');
+    else if(data.groupId){
+      console.log("그룹공유");
+        axios.post(`http://13.209.48.48:8080//api/groups/${data.groupId}/schedules`, {
 
+          title: data.title,
+          startDateTime: data.startDateTime,
+          endDateTime:data.endDateTime
+        }, {
+          headers: {
+            'Authorization': 'Bearer ' + token,
+          }
+        })
+        .then(response => {
+          eventsUpdate()
+          console.log(events);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+
+    else {
+      console.log("개인일정");
       axios.post(API_CALENDAR, data, {
         headers: {
           'Authorization': 'Bearer ' + token
@@ -89,7 +96,7 @@ function MyCalendar() {
         console.error(error);
       });
     }
-  };
+}
 
   const eventsUpdate = () => {
     axios.get(API_USER,{
@@ -115,10 +122,17 @@ function MyCalendar() {
     .catch(error => console.log(error));
   }
 
+  useEffect(() => {
+      eventsUpdate();
+  }, []);
+
 useEffect(() => {
-  eventsUpdate();
+  // console.log(Personal);
+  if(!Personal)
+    eventsUpdate();
+  else setEvents([]);
   // console.log(events);
-}, [events]);
+}, [Personal]);
 
   const handleEventClick = (clickInfo) => {
     const eventId = clickInfo.event.id;
@@ -211,6 +225,7 @@ const handleDeleteClick = (event) => {
           onAddEventSubmit={handleAddEventSubmit}
           onClose={() => setShowAddEventModal(false)}
           isOpen={showAddEventModal}
+          groups={Groups}
         />
       )}
 
