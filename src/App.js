@@ -37,8 +37,22 @@ function App() {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAccepted, setisAccepted] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [groups, setGroups] = useState([]);
+  const [showPersonalSchedule, setShowPersonalSchedule] = useState(true);
 
-  const [isKakaoShare, setKakaoShare] = useState(false);
+  const handleSelectGroup = (group) => {
+    setSelectedGroup(group);
+  };
+
+  const handleGroups = (groups) => {
+    setGroups(groups);
+    console.log(groups);
+  };
+
+  const handlePersonalScheduleCheckboxChange = (personal) => {
+    setShowPersonalSchedule(personal);
+  };
 
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
@@ -78,7 +92,12 @@ function App() {
       <div className="App">
         <header className="App-header">
           <MenuButton onClick={handleMenuToggle} />
-          <Menu isOpen={menuOpen} />
+
+          <Menu isOpen={menuOpen}
+          onSelectGroup={handleSelectGroup}
+          Groups={handleGroups}
+          Personal={handlePersonalScheduleCheckboxChange}/>
+
           {isAuthenticated ? <p style={{fontSize:'15px'}}>user : {localStorage.getItem('user')}</p> : null}
           <h1 id="planus-title">Planus</h1>
           <NotificationButton onClick={handleNotificationToggle}/>
@@ -89,7 +108,7 @@ function App() {
         <div className="App-body" onClick={handleMenuClose} >
           <Routes>
             <Route path="/login" element={<LoginPage setIsAuthenticated={setIsAuthenticated} IsAuthenticated={isAuthenticated}/>} />
-            <Route path="/mycalendar" element={isAuthenticated ? <MyCalendar /> : <Navigate to="/login" />} />
+            <Route path="/mycalendar" element={isAuthenticated ? <MyCalendar selectedGroup={selectedGroup} Groups={groups} Personal={showPersonalSchedule}/> : <Navigate to="/login" />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/" element={<Navigate to={redirectPath} />} />
           </Routes>

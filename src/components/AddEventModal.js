@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
+import "./AddEventModal.css";
 
-function AddEventModal({ onAddEventSubmit, onClose, isOpen }) {
+function AddEventModal({ onAddEventSubmit, onClose, isOpen, groups}) {
   const [title, setTitle] = useState("");
-  const [content, setcontent] = useState("");
+  const [content, setContent] = useState("");
   const [startDateTime, setStartDateTime] = useState("");
   const [endDateTime, setEndDateTime] = useState("");
   const [shared, setShared] = useState("");
   const [allDay, setAllDay] = useState(false);
+  const [groupId, setGroupId] = useState(null);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,10 +27,11 @@ function AddEventModal({ onAddEventSubmit, onClose, isOpen }) {
       endDateTime,
       allDay,
       shared,
+      groupId, // 선택된 그룹의 id 값을 전달
     });
 
     setTitle("");
-    setcontent("");
+    setContent("");
     setStartDateTime("");
     setEndDateTime("");
     setShared("");
@@ -37,7 +41,7 @@ function AddEventModal({ onAddEventSubmit, onClose, isOpen }) {
   };
 
   return (
-    <Modal className={"modal"} isOpen={isOpen} onRequestClose={onClose}>
+    <Modal className={"add-modal"} isOpen={isOpen} onRequestClose={onClose}>
       <form className="add-events-modal" onSubmit={handleSubmit}>
         <label htmlFor="title">일정 제목 : </label>
         <input
@@ -52,7 +56,7 @@ function AddEventModal({ onAddEventSubmit, onClose, isOpen }) {
           style={{ height: "4rem" }}
           id="content"
           value={content}
-          onChange={(e) => setcontent(e.target.value)}
+          onChange={(e) => setContent(e.target.value)}
         ></textarea>
 
         <label htmlFor="startDateTime">시작 시간 : </label>
@@ -88,6 +92,21 @@ function AddEventModal({ onAddEventSubmit, onClose, isOpen }) {
           />
           하루 종일
         </label>
+
+          <div>
+            <label htmlFor="group">그룹 선택: </label>
+            <select
+              id="group"
+              value={groupId}
+              onChange={(e) => setGroupId(e.target.value)}
+            >
+              <option value="">그룹</option>
+              {groups.map(group => (
+              <option key={group.id} value={group.id}>{group.name}</option>
+            ))}
+            </select>
+          </div>
+        
 
         <button type="submit">추가</button>
         <button type="button" onClick={onClose}>
