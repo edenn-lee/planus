@@ -83,6 +83,8 @@ function MyCalendar() {
         setEvents(updatedEvents);
         
         setShowAddEventModal(false);
+
+        console.log(events)
         
       })
       .catch(error => {
