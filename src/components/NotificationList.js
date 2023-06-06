@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Message from './Message';
 import axios from 'axios';
-
+import './Notification.css';
 
 
 const API_ACCEPT = 'http://13.209.48.48:8080/api/messages/accept'
@@ -71,7 +71,7 @@ function NotificationList() {
   };
 
   return (
-    <div>
+    <div className='message-box'>
       {messages.map((message) => (
         <Message
             sharedScheduleId={message.sharedScheduleId}
