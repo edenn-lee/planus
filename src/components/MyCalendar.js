@@ -90,6 +90,8 @@ function MyCalendar({ selectedGroup ,Groups,Personal}) {
         setEvents(updatedEvents);
         
         setShowAddEventModal(false);
+
+        console.log(events)
         
       })
       .catch(error => {

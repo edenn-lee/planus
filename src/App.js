@@ -9,14 +9,15 @@ import Notification from './components/Notification';
 import Group from './pages/Group';
 import Setting from './pages/Setting';
 
+import KakaoShare from './components/KakaoShare';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './components/RegisterPage';
 
 import axios from 'axios';
 
 
-// axios.defaults.baseURL = 'http://13.209.48.48:8080/api'; // 백엔드 API의 기본 URL 설정
-// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+axios.defaults.baseURL = 'http://13.209.48.48:8080/api'; // 백엔드 API의 기본 URL 설정
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
 
 // const express = require('express');
@@ -72,8 +73,19 @@ function App() {
     setNotificationOpen(false);
   };
  
+  const handleKakaoShare = () => {
+    setKakaoShare(!isKakaoShare);
+    console.log(isKakaoShare);
+  };
+
+  const handleKakaoShareClose = () => {
+    setKakaoShare(false);
+  };
+
+
   const redirectPath = isAuthenticated ? '/mycalendar' : '/login';
   
+
 
   return (
     <BrowserRouter>
@@ -90,6 +102,7 @@ function App() {
           <h1 id="planus-title">Planus</h1>
           <NotificationButton onClick={handleNotificationToggle}/>
           <Notification isOpen={notificationOpen} handleclose={handleNotificationClose} isAccepted={true}/>
+          <KakaoShare isOpen ={handleKakaoShare} handleclose = {handleKakaoShareClose} isAccepted={true}/>
         </header>
 
         <div className="App-body" onClick={handleMenuClose} >
