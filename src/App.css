@@ -5,6 +5,8 @@
   flex-direction: column;
 }
 
+
+
 .App-header {
   display: flex;
   justify-content: space-between;
@@ -263,6 +265,10 @@ ul.menu-content li a {
 
 .edit-button{
   margin-bottom: 1rem;
+  font-family: 'OAGothic-ExtraBold';
+  font-weight: 700;
+  background-color: ivory;
+  border-radius: 15%;
 }
 
 .delete-button{
@@ -285,45 +291,7 @@ ul.menu-content li a {
   vertical-align: middle;
 }
 
-.event-detail-modal .modal-close:hover {
-  color: #333;
-}
 
-/* Style for modal body */
-.event-detail-modal .modal-body {
-  font-size: 1rem;
-  color: #333;
-}
-
-/* Style for modal input */
-.event-detail-modal .modal-input {
-  display: block;
-  width: 100%;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-  color: #333;
-}
-
-/* Style for modal button */
-.event-detail-modal .modal-button {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #fff;
-  background-color: #007bff;
-  cursor: pointer;
-}
-
-/* Style for modal button:hover */
-.event-detail-modal .modal-button:hover {
-  background-color: #0069d9;
-}
 
 
 .notification-list {

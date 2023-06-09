@@ -37,14 +37,19 @@ function App() {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAccepted, setisAccepted] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState([]);
   const [groups, setGroups] = useState([]);
   const [showPersonalSchedule, setShowPersonalSchedule] = useState();
   const [isKakaoShare, setKakaoShare]= useState(false);
+  const [events, setEvents] = useState([]);
 
 
+  const handleSetEvents = (events) => {
+    setEvents(events);
+    console.log(events);
+  }
 
-  const handleSelectGroup = (group) => {
+  const handleSelectedGroup = (group) => {
     setSelectedGroup(group);
   };
 
@@ -102,9 +107,12 @@ function App() {
           <MenuButton onClick={handleMenuToggle} />
 
           <Menu isOpen={menuOpen}
-          onSelectGroup={handleSelectGroup}
+          handleSelectedGroup={handleSelectedGroup}
+          selectedGroup={selectedGroup}
           Groups={handleGroups}
-          Personal={handlePersonalScheduleCheckboxChange}/>
+          Personal={handlePersonalScheduleCheckboxChange}
+          events = {events}
+          setEvents={handleSetEvents}/>
 
           {isAuthenticated ? <p style={{fontSize:'15px'}}>user : {localStorage.getItem('user')}</p> : null}
           <h1 id="planus-title">Planus</h1>
@@ -116,7 +124,14 @@ function App() {
         <div className="App-body" onClick={handleMenuClose} >
           <Routes>
             <Route path="/login" element={<LoginPage setIsAuthenticated={setIsAuthenticated} IsAuthenticated={isAuthenticated}/>} />
-            <Route path="/mycalendar" element={isAuthenticated ? <MyCalendar selectedGroup={selectedGroup} Groups={groups} Personal={showPersonalSchedule}/> : <Navigate to="/login" />} />
+            <Route path="/mycalendar" element={isAuthenticated ?
+            <MyCalendar
+            selectedGroup={selectedGroup}
+            Groups={groups}
+            Personal={showPersonalSchedule}
+            events={events}
+            setEvents={handleSetEvents}/>
+            : <Navigate to="/login" />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/" element={<Navigate to={redirectPath} />} />
           </Routes>

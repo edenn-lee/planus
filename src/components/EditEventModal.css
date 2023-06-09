@@ -1,0 +1,56 @@
+.edit-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+  
+  .edit-events-modal {
+    width: 400px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 4px;
+  }
+  
+  .edit-events-modal label {
+    display: block;
+    margin-bottom: 8px;
+  }
+  
+  .edit-events-modal input[type="text"],
+  .edit-events-modal textarea,
+  .edit-events-modal select {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .edit-events-modal input[type="checkbox"] {
+    margin-right: 4px;
+  }
+  
+  .edit-events-modal button {
+    margin-top: 16px;
+    padding: 8px 16px;
+    font-size: 16px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .edit-events-modal button[type="button"] {
+    margin-left: 8px;
+    background-color: #ccc;
+  }
+  

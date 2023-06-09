@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
-import Group from './Group';
+// import Group from './Group';
 
-function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
+function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Personal,events,setEvents}) {
   const token = localStorage.getItem('token');
   const API_GROUP = 'http://13.209.48.48:8080/api/groups';
   const API_SCHEDULE = 'http://13.209.48.48:8080/api/schedules';
@@ -16,10 +16,10 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
   const [groupName, setGroupName] = useState('');
   const [groups, setGroups] = useState([]);
   const [memberIds, setMemberIds] = useState([]);
-  const [selectedGroup, setSelectedGroup] = useState(null);
+  // const [selectedGroup, setSelectedGroup] = useState([]);
+  const [deleteGroup, setDeleteGroup] = useState('');
   const [schedules, setSchedules] = useState([]);
   const [showPersonalSchedule, setShowPersonalSchedule] = useState(true);
-
 
   
   // useEffect(() => {
@@ -34,6 +34,8 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
 
   const handleGroupClick = () => {
     setShowGroupList(!showGroupList);
+    if(!showGroupList) setShowEditGroup(false);
+    console.log(showGroupList);
   };
 
   const handleAddGroupClick = () => {
@@ -138,22 +140,34 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
       });
   };
 
+ 
+
+  // useEffect(() => {
+  //   if(selectedGroup){
+  //     handleSelectedGroupEvents()
+  //   }
+  // }, [selectedGroup]);
+
 
 useEffect(()=>{
   LoadGroups();
 },[])
 
   const handleGroupCheckboxChange = (event, group) => {
-    if (event.target.checked) {
-      setSelectedGroup(group);
-      console.log(group);
-      onSelectGroup(group);
+    const isChecked = event.target.checked;
+
+    if (isChecked) {
+      handleSelectedGroup((prevSelected) => [...prevSelected, group]);
     } else {
-      setSelectedGroup(null);
-      onSelectGroup(null);
-      console.log(group);
+      handleSelectedGroup((prevSelected) =>
+        prevSelected ? prevSelected.filter((selected) => selected.id !== group.id) : []
+      );
     }
   };
+
+  useEffect(()=>{
+    console.log(selectedGroup);
+  },[selectedGroup])
 
   const handlePersonalScheduleCheckboxChange = (event) => {
     console.log(event.target.checked);
@@ -167,13 +181,10 @@ useEffect(()=>{
   },[showPersonalSchedule])
 
 
-  const checkDeleteGroupSubmit = () => {
+  const checkDeleteGroupSubmit = (groupId) => {
     setShowDeleteModal(true);
+    setDeleteGroup(groupId)
   };
-
-{/* <button type="submit" onClick={handleDeleteGroupSubmit}>
-                        삭제
-                      </button> */}
 
   return (
     <div className={`menu-container ${isOpen ? 'open' : ''}`}>
@@ -187,7 +198,7 @@ useEffect(()=>{
           </NavLink>
         </li>
         <li>
-          <li onClick={()=>{handleGroupClick();LoadGroups();}} style={{ padding: '0px', margin: '0px' }}>
+          <li onClick={()=>{handleGroupClick(); LoadGroups();}} style={{ padding: '0px', margin: '0px' }}>
             Group
           </li>
           {showGroupList && (
@@ -206,42 +217,40 @@ useEffect(()=>{
                     나의 일정
                   </label>
                 </li>
-                {groups.map((group) => (
+                 {groups.map((group) => (
                   <li style={{ fontSize: '14px' }} key={group.name}>
                     <label>
                       <input
                         type="checkbox"
-                        checked={selectedGroup?.name === group.name}
+                        checked={selectedGroup.some((selected) => selected.id === group.id)}
                         onChange={(event) => handleGroupCheckboxChange(event, group)}
                       />
                       {group.name}
-                      
                     </label>
                     {showEditGroup && (
                       <>
-                    <button className="delete-button" onClick={checkDeleteGroupSubmit}>
-                      삭제
-                    </button>
-                      {showDeleteModal && (
-                        <div className="modal">
-                          <p>정말로 삭제하시겠습니까?</p>
-                          <button onClick={()=>handleDeleteGroupSubmit(group.id)}>삭제</button>
-                          <button onClick={()=>setShowDeleteModal(false)}>취소</button>
-                        </div>
-                      )}
-                    </>
+                        <button className="delete-button" onClick={() => checkDeleteGroupSubmit(group.id)}>
+                          삭제
+                        </button>
+                        {showDeleteModal && (
+                          <div className="modal">
+                            <p>정말로 삭제하시겠습니까?</p>
+                            <button onClick={() => handleDeleteGroupSubmit(deleteGroup)}>삭제</button>
+                            <button onClick={() => setShowDeleteModal(false)}>취소</button>
+                          </div>
+                        )}
+                        
+                      </>
                     )}
                   </li>
-                  
                 ))}
                 {showEditGroup && (
-                  <div style={{ display: 'flex', flexDirection: "column",alignItems: 'center'}}>
-                      {showAddButton && (
-                        <button className="add-button" onClick={handleAddGroupClick}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    {showAddButton && (
+                      <button className="add-button" onClick={handleAddGroupClick}>
                         그룹 추가
                       </button>
-                      )}
-                      
+                    )}
                     {showAddGroup && (
                       <li style={{ marginTop: '-1rem' }}>
                         <form onSubmit={handleAddGroupSubmit}>
@@ -252,19 +261,17 @@ useEffect(()=>{
                             onChange={handleGroupNameChange}
                             style={{ width: '150px' }}
                           />
-                          
-                          <button type="submit" onClick={()=>setShowAddButton(true)}>생성</button>
+                          <button type="submit" onClick={() => setShowAddButton(true)}>
+                            생성
+                          </button>
                           <button type="button" onClick={handleAddGroupClick}>
                             취소
                           </button>
-                          
                         </form>
                       </li>
                     )}
-                    
                   </div>
                 )}
-                
               </ul>
             </div>
           )}
@@ -275,17 +282,6 @@ useEffect(()=>{
           </NavLink>
         </li>
       </ul>
-
-      {schedules.length > 0 && (
-        <div>
-          <h3>Selected Schedules</h3>
-          <ul>
-            {schedules.map((schedule) => (
-              <li key={schedule.id}>{schedule.title}</li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 }
