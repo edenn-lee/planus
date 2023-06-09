@@ -60,7 +60,7 @@ function App() {
 
   const handlePersonalScheduleCheckboxChange = (personal) => {
     setShowPersonalSchedule(!personal);
-    console.log(personal)
+    // console.log(personal)
   };
 
   useEffect(()=>{

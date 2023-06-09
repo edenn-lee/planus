@@ -69,7 +69,7 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
       name: groupName,
     };
 
-    axios.post(API_GROUP, data, {
+    axios.post('http://13.209.48.48:8080/api/groups', data, {
         headers: {
           'Authorization': 'Bearer ' + token
         },
@@ -108,9 +108,9 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
   }
 
 
-  const handleDeleteGroupSubmit = (groupId) => {
-  
-    axios.delete(`http://13.209.48.48:8080/api/groups/${groupId}`, {
+  const handleDeleteGroupSubmit = (deleteGroup) => {
+    // `http://13.209.48.48:8080/api/groups/owner/${deleteGroup.id}`
+    axios.delete(`http://13.209.48.48:8080/api/groups/${deleteGroup.id}/members/${deleteGroup.memberIds}`, {
         headers: {
           'Authorization': 'Bearer ' + token
         },
@@ -126,24 +126,31 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
   };
   
     const LoadGroups = () => {
-    axios
-      .get("http://13.209.48.48:8080/api/groups/mygroups", {
-        headers: {
-          'Authorization': 'Bearer ' + token
-        },
-      })
-      .then((response) => {
-        // console.log(localStorage.getItem('userId'))
-        setGroups(response.data);
-        Groups(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
+      axios
+        .get("http://13.209.48.48:8080/api/groups/mygroups", {
+          headers: {
+            'Authorization': 'Bearer ' + token
+          },
+        })
+        .then((response) => {
+          // console.log(localStorage.getItem('userId'))
+          setGroups(response.data);
+          Groups(response.data);
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
       });
   };
 
- 
+ const setSharedData = () => {
+  const data = groups.find((group)=>group.id===56)
+  console.log(data);
+ }
+
+//  useEffect(()=>{
+//   setSharedData();
+//  },[LoadGroups])
 
   // useEffect(() => {
   //   if(selectedGroup){
@@ -196,7 +203,7 @@ useEffect(()=>{
           <h2>선택 그룹 : {deleteGroup.name}</h2>
           <h3>삭제하시겠습니까?</h3>
           <div className='button-row'>
-            <button id='button-accept' onClick={() => handleDeleteGroupSubmit(deleteGroup.id)}>삭제</button>
+            <button id='button-accept' onClick={() => handleDeleteGroupSubmit(deleteGroup)}>삭제</button>
             <button id='button-reject' onClick={() => setShowDeleteModal(false)}>취소</button>
           </div>
         </div>

@@ -7,7 +7,6 @@ function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(email,password,nickname);
@@ -15,13 +14,9 @@ function RegisterPage() {
       email: email,
       password: password,
       nickname: nickname
-      
     }, 
-    
     )
-    
-      .then((response) => {
-        
+    .then((response) => {
         if (response.data){
           console.log(response);
           alert('Register success')
@@ -39,25 +34,25 @@ function RegisterPage() {
   };
 
   return (
-    <div>
+    <div style={{textAlign:"center"}}>
       <form  style={{display:'flex', flexDirection:'column', alignItems:'center'}} onSubmit={handleSubmit}>
       <img src='/planus-logo.png' alt='Planus Logo' style={{paddingBottom:'5rem'}}/>
         <input 
-        style={{margin:'5px'}}
-        placeholder="ID"
-        type="nickname" value={nickname} onChange={(e) => setNickname(e.target.value)} />
+          style={{margin:'5px'}}
+          placeholder="ID"
+          type="nickname" value={nickname} onChange={(e) => setNickname(e.target.value)} />
         <input 
-        style={{margin:'5px'}}
-        placeholder="email"
-        type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          style={{margin:'5px'}}
+          placeholder="email"
+          type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <input 
-        style={{margin:'5px'}}
-        placeholder="password"
-        type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          style={{margin:'5px'}}
+          placeholder="password"
+          type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <button style={{display:'flex',margin:'5px', width:'100px'}} type="submit">Register</button>
       </form>
       {errorMessage && <div>{errorMessage}</div>}
-      {/* <Link to="/login">Already have an account? Login here</Link> */}
+      <Link to="/login">Already have an account? Login here</Link>
     </div>
   );
 }

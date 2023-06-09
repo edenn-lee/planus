@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import "./EditEventModal.css";
 
-function EditEventModal({ hide,event, onClose, show, groups ,handleEditSubmit}) {
+function EditEventModal({ hide,event, onClose, show, groups ,handleEditSubmit,eventUpdate}) {
   const [title, setTitle] = useState(event.title);
   const [content, setContent] = useState(event.content);
   const [startDateTime, setStartDateTime] = useState(event.startDateTime);
@@ -19,7 +19,7 @@ function EditEventModal({ hide,event, onClose, show, groups ,handleEditSubmit}) 
   
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
 
     if (!title.trim()) {
       alert("일정 내용을 입력해주세요.");
