@@ -39,14 +39,14 @@ function App() {
   const [isAccepted, setisAccepted] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState([]);
   const [groups, setGroups] = useState([]);
-  const [showPersonalSchedule, setShowPersonalSchedule] = useState();
+  const [showPersonalSchedule, setShowPersonalSchedule] = useState(true);
   const [isKakaoShare, setKakaoShare]= useState(false);
   const [events, setEvents] = useState([]);
 
 
   const handleSetEvents = (events) => {
     setEvents(events);
-    console.log(events);
+    // console.log(events);
   }
 
   const handleSelectedGroup = (group) => {

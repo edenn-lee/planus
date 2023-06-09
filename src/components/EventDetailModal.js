@@ -3,21 +3,22 @@ import { useState ,useEffect} from 'react';
 import './EventDetailModal.css';
 import axios from 'axios';
 import EditEventModal from './EditEventModal';
+// import Modal from "react-modal";
 
-const EventDetailModal = ({groups, show, event, onClose, onEditClick, onDeleteClick, events, setEvents }) => {
+const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, events, setEvents }) => {
   const [images, setImages] = useState(event.images);
   const token = localStorage.getItem('token');
-  const [showEditEventModal, setShowEditEventModal] = useState(false);
+  
 
-  const handleEditClick = () => {
-    setShowEditEventModal(true);
-    console.log(showEditEventModal);
-  };
+  // const handleEditClick = () => {
+  //   setShowEditEventModal(true);
+  //   console.log(showEditEventModal);
+  // };
 
-  useEffect(()=>{
-    console.log("EditEventModal");
-    console.log(groups)
-},[groups])
+//   useEffect(()=>{
+//     console.log("EditEventModal");
+//     console.log(showEditEventModal);
+// },[showEditEventModal])
 
 
   const handleDeleteClick = () => {
@@ -45,46 +46,56 @@ const EventDetailModal = ({groups, show, event, onClose, onEditClick, onDeleteCl
     }
   };
 
-  const handleEditEvent = (updatedEvent) => {
-    onEditClick(updatedEvent);
-    setShowEditEventModal(false);
-  };
-
   return (
     <>
-      <Modal show={show} onHide={onClose} className="event-detail-modal">
+      <Modal show={show}
+      onHide={onClose}
+      className="event-detail-modal"
+      >
         <Modal.Header>
           <Modal.Title>{event.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {images && <img src={`data:image/jpeg;base64,${images}`} alt={event.title} />}
+          {images && <img src={`data:image/jpeg;base64,${images}`} alt="이미지가업다" />}
           {event.content && <p>{event.content}</p>}
           <p>{event.start.toLocaleString()}</p>
           <input type="file" onChange={(e) => handleImageUpdate(event, e.target.files[0])} />
+          
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleEditClick}>
-            Edit
+          <Button variant="secondary" onClick={()=>{onClose(); showEditEvent(); }}>
+            수정
           </Button>
           <Button variant="danger" onClick={handleDeleteClick}>
-            Delete
+            삭제
           </Button>
           <Button variant="secondary" onClick={onClose}>
-            Close
+            취소
           </Button>
+          <div className="comments-section">
+            <h3>댓글</h3>
+            <div className="comment">
+              <span className="author">John Doe</span>
+              <p className="content">첫 번째 댓글입니다.</p>
+              <span className="comment-date">2023-06-09 14:30</span>
+            </div>
+            <div className="comment">
+              <span className="author">Jane Smith</span>
+              <p className="content">두 번째 댓글입니다.</p>
+              <span className="comment-date">2023-06-09 15:15</span>
+            </div>
+            <div className="comment-divider"></div>
+            <form className="comment-form">
+              <textarea placeholder="댓글을 입력하세요"></textarea>
+              <button type="submit">댓글 작성</button>
+            </form>
+          </div>
         </Modal.Footer>
+          
       </Modal>
 
-      {showEditEventModal && (
-        <EditEventModal
-          show={showEditEventModal}
-          event={event}
-          onClose={() => setShowEditEventModal(false)}
-          onEditClick={handleEditEvent}
-          groups={groups}
-        />
-      )}
+      
     </>
   );
 };

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import "./EditEventModal.css";
 
-function EditEventModal({ event, onUpdateEvent, onClose, isOpen, groups }) {
+function EditEventModal({ hide,event, onClose, show, groups ,handleEditSubmit}) {
   const [title, setTitle] = useState(event.title);
   const [content, setContent] = useState(event.content);
   const [startDateTime, setStartDateTime] = useState(event.startDateTime);
@@ -16,7 +16,7 @@ function EditEventModal({ event, onUpdateEvent, onClose, isOpen, groups }) {
     console.log("EditEventModal");
     console.log(groups)
 },[])
-
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,13 +37,15 @@ function EditEventModal({ event, onUpdateEvent, onClose, isOpen, groups }) {
       groupId,
     };
 
-    onUpdateEvent(updatedEvent);
+    handleEditSubmit(updatedEvent);
+    
     onClose();
   };
 
   return (
-    <Modal className="edit-modal" isOpen={isOpen} onRequestClose={onClose}>
+    <Modal className="edit-modal" isOpen={show} onRequestClose={onClose}>
       <form className="edit-events-modal" onSubmit={handleSubmit}>
+        <h2 style={{textAlign:"center"}}>일정 수정</h2>
         <label htmlFor="title">일정 제목:</label>
         <input
           type="text"
@@ -110,7 +112,7 @@ function EditEventModal({ event, onUpdateEvent, onClose, isOpen, groups }) {
           </select>
         </div>
 
-        <button type="submit">수정</button>
+        <button type="submit" onClick={()=>{handleSubmit()}}>수정</button>
         <button type="button" onClick={onClose}>
           취소
         </button>

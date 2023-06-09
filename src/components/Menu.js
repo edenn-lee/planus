@@ -34,8 +34,11 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
 
   const handleGroupClick = () => {
     setShowGroupList(!showGroupList);
-    if(!showGroupList) setShowEditGroup(false);
-    console.log(showGroupList);
+    if(!showGroupList) {
+      setShowEditGroup(false);
+      setShowDeleteModal(false)
+    }
+    // console.log(showGroupList);
   };
 
   const handleAddGroupClick = () => {
@@ -130,7 +133,7 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
         },
       })
       .then((response) => {
-        console.log(localStorage.getItem('userId'))
+        // console.log(localStorage.getItem('userId'))
         setGroups(response.data);
         Groups(response.data);
         console.log(response.data);
@@ -181,12 +184,23 @@ useEffect(()=>{
   },[showPersonalSchedule])
 
 
-  const checkDeleteGroupSubmit = (groupId) => {
+  const checkDeleteGroupSubmit = (group) => {
     setShowDeleteModal(true);
-    setDeleteGroup(groupId)
+    setDeleteGroup(group)
   };
 
   return (
+    <>
+    {showDeleteModal && (
+        <div id='check-delete' className="modal">
+          <h2>선택 그룹 : {deleteGroup.name}</h2>
+          <h3>삭제하시겠습니까?</h3>
+          <div className='button-row'>
+            <button id='button-accept' onClick={() => handleDeleteGroupSubmit(deleteGroup.id)}>삭제</button>
+            <button id='button-reject' onClick={() => setShowDeleteModal(false)}>취소</button>
+          </div>
+        </div>
+    )}
     <div className={`menu-container ${isOpen ? 'open' : ''}`}>
       <div className="menu-title">
         <h2>Menu</h2>
@@ -229,17 +243,9 @@ useEffect(()=>{
                     </label>
                     {showEditGroup && (
                       <>
-                        <button className="delete-button" onClick={() => checkDeleteGroupSubmit(group.id)}>
+                        <button className="delete-button" onClick={() => checkDeleteGroupSubmit(group)}>
                           삭제
                         </button>
-                        {showDeleteModal && (
-                          <div className="modal">
-                            <p>정말로 삭제하시겠습니까?</p>
-                            <button onClick={() => handleDeleteGroupSubmit(deleteGroup)}>삭제</button>
-                            <button onClick={() => setShowDeleteModal(false)}>취소</button>
-                          </div>
-                        )}
-                        
                       </>
                     )}
                   </li>
@@ -276,6 +282,7 @@ useEffect(()=>{
             </div>
           )}
         </li>
+        
         <li>
           <NavLink exact to="/schedule" activeClassName="active" onClick={onClose}>
             Schedule
@@ -283,7 +290,9 @@ useEffect(()=>{
         </li>
       </ul>
     </div>
+    </>
   );
+  
 }
 
 export default Menu;
