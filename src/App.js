@@ -40,6 +40,7 @@ function App() {
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [groups, setGroups] = useState([]);
   const [showPersonalSchedule, setShowPersonalSchedule] = useState(true);
+  const [isKakaoShare, setKakaoShare] = useState(true);
 
   const handleSelectGroup = (group) => {
     setSelectedGroup(group);

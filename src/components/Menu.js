@@ -17,6 +17,7 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [schedules, setSchedules] = useState([]);
   const [showPersonalSchedule, setShowPersonalSchedule] = useState(true);
+  const [isKakaoShare, setKakaoShare] = useState(true);
 
   // useEffect(() => {
   //   if (selectedGroup) {
@@ -48,8 +49,13 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
     setMemberIds(event.target.value);
   };
 
+  const handleKakaoShareClick = () => {
+    setKakaoShare(!isKakaoShare);
+  };
+
   const handleAddGroupSubmit = (event) => {
     event.preventDefault();
+
 
     const data = {
       name: groupName,
@@ -152,6 +158,9 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
             <div style={{ paddingLeft: '0px' }} className="sub-menu-container">
               <button className="add-button" onClick={handleEditGroupClick}>
                 편집
+              </button>
+              <button className="add-button" onClick={handleKakaoShareClick}>
+                공유
               </button>
               <ul style={{ paddingLeft: '1rem' }}>
                 <li style={{ fontSize: '18px' }}>
