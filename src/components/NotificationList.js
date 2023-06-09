@@ -36,11 +36,10 @@ function NotificationList() {
 
         setMessages(filteredMessages);
         // console.log(filteredMessages);
-
-
-
-
       }).catch(error => console.log(error));
+  }
+  useEffect(() => {
+    getMessages()
   }, []);
 
   const handleAccept = (message) => {
