@@ -1,15 +1,25 @@
-import { Modal, Button } from 'react-bootstrap';
-import { useState } from 'react';
+import { Modal, Button, ModalBody } from 'react-bootstrap';
+import { useState ,useEffect} from 'react';
+import './EventDetailModal.css';
 import axios from 'axios';
+import EditEventModal from './EditEventModal';
+// import Modal from "react-modal";
 
-const EventDetailModal = ({ show, event, onClose, onEditClick, onDeleteClick, events, setEvents }) => {
+const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, events, setEvents }) => {
   const [images, setImages] = useState(event.images);
-  // const decodedImage = atob(event.images);
   const token = localStorage.getItem('token');
+  
 
-  const handleEditClick = () => {
-    onEditClick(event);
-  };
+  // const handleEditClick = () => {
+  //   setShowEditEventModal(true);
+  //   console.log(showEditEventModal);
+  // };
+
+//   useEffect(()=>{
+//     console.log("EditEventModal");
+//     console.log(showEditEventModal);
+// },[showEditEventModal])
+
 
   const handleDeleteClick = () => {
     onDeleteClick(event);
@@ -27,42 +37,66 @@ const EventDetailModal = ({ show, event, onClose, onEditClick, onDeleteClick, ev
         },
       });
 
-      // 업데이트된 event 객체의 imageSrc 필드를 갱신
       const updatedEvent = response.data;
       setImages(updatedEvent.images);
-      console.log(event.images);
-      // 업데이트된 event 객체로 state를 갱신
       const updatedEvents = events.map((evt) => (evt.id === updatedEvent.id ? updatedEvent : evt));
       setEvents(updatedEvents);
-      
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <Modal show={show} onHide={onClose} className="event-detail-modal">
-      <Modal.Header closeButton>
-        <Modal.Title>{event.title}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        {images && <img src={`data:image/jpeg;base64,${images}`} alt={event.title} />}
-        {event.content && <p>{event.content}</p>}
-        <p>{event.start.toLocaleString()}</p>
-        <input type="file" onChange={(e) => handleImageUpdate(event, e.target.files[0])} />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleEditClick}>
-          Edit
-        </Button>
-        <Button variant="danger" onClick={handleDeleteClick}>
-          Delete
-        </Button>
-        <Button variant="secondary" onClick={onClose}>
-          Close
-        </Button>
-      </Modal.Footer>
-    </Modal>
+    <>
+      <Modal show={show}
+      onHide={onClose}
+      className="event-detail-modal"
+      >
+        <Modal.Header>
+          <Modal.Title>{event.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {images && <img src={`data:image/jpeg;base64,${images}`} alt="이미지가업다" />}
+          {event.content && <p>{event.content}</p>}
+          <p>{event.start.toLocaleString()}</p>
+          <input type="file" onChange={(e) => handleImageUpdate(event, e.target.files[0])} />
+          
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={()=>{onClose(); showEditEvent(); }}>
+            수정
+          </Button>
+          <Button variant="danger" onClick={handleDeleteClick}>
+            삭제
+          </Button>
+          <Button variant="secondary" onClick={onClose}>
+            취소
+          </Button>
+          <div className="comments-section">
+            <h3>댓글</h3>
+            <div className="comment">
+              <span className="author">John Doe</span>
+              <p className="content">첫 번째 댓글입니다.</p>
+              <span className="comment-date">2023-06-09 14:30</span>
+            </div>
+            <div className="comment">
+              <span className="author">Jane Smith</span>
+              <p className="content">두 번째 댓글입니다.</p>
+              <span className="comment-date">2023-06-09 15:15</span>
+            </div>
+            <div className="comment-divider"></div>
+            <form className="comment-form">
+              <textarea placeholder="댓글을 입력하세요"></textarea>
+              <button type="submit">댓글 작성</button>
+            </form>
+          </div>
+        </Modal.Footer>
+          
+      </Modal>
+
+      
+    </>
   );
 };
 

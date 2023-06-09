@@ -1,9 +1,12 @@
 .App {
-  font-family: 'OAGothic-ExtraBold';
+  font-family: 'KBO-Dia-Gothic_bold';
+  letter-spacing: 1px;
   height: 100%;
   display: flex;
   flex-direction: column;
 }
+
+
 
 .App-header {
   display: flex;
@@ -56,7 +59,7 @@
   top: 4rem;
   left: 0;
   bottom: 0;
-  width: 200px;
+  width: 250px;
   transform: translateX(-100%);
   transition: transform 0.3s ease-in-out;
   background-color: #0d1e30;
@@ -89,7 +92,7 @@ ul.menu-content {
 
 
 ul.menu-content li {
-  font-size: 25px;
+  font-size: 30px;
   /* text-align: center; */
   padding-top: 1rem;
   box-sizing: border-box;
@@ -108,6 +111,9 @@ ul.menu-content li ul{
   margin-left: -4rem;
 }
 
+ul.menu-content li label{
+  font-size: 22px;
+}
 
 ul.menu-content li a {
   background-color: none;
@@ -115,10 +121,6 @@ ul.menu-content li a {
   text-decoration: none; /* 밑줄 제거 */
   justify-content: flex-start;
   /* margin-left: 3rem; */
-}
-
-.add-button {
- margin-left: 7rem;
 }
 
 .ReactModal__Content.ReactModal__Content--after-open.modal{
@@ -140,6 +142,22 @@ ul.menu-content li a {
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
 } */
 
+.check-delete-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  width: 50%;
+  height: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* background-color: rgba(119, 119, 119, 0.9); */
+  
+  /* z-index: 5; */
+  overflow: hidden;
+}
+
 .modal {
   display: flex;
   justify-content: center;
@@ -152,13 +170,14 @@ ul.menu-content li a {
   transform: translate(-50%, -50%);
   /* background-color: rgba(119, 119, 119, 0.9); */
   
-  z-index: 10000;
+  /* z-index: 5; */
   overflow: hidden;
 }
 
 
 .modal-text {
-  font-family: 'Arial', sans-serif; /* 모달 텍스트의 폰트 변경 */
+  font-family: 'KBO-Dia-Gothic_bold';
+
 }
 
 .modal-input-wrapper {
@@ -209,64 +228,54 @@ ul.menu-content li a {
 }
 
 /* Style for modal container */
-.event-detail-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 40%;
-  height: 20%;
-  max-width: 500px;
-  padding: 2rem;
-  border-radius: 8px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  z-index: 100;
-}
 
-/* Style for modal header */
-.event-detail-modal .modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #ccc;
-}
-
-/* Style for modal title */
-.event-detail-modal .modal-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
-}
-
-/* Style for modal close button */
-.event-detail-modal .modal-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 2rem;
-  font-weight: bold;
-  color: #999;
-  cursor: pointer;
-  border: none;
-  background-color: transparent;
-}
-
-/* .sub-menu-container li:before{
-margin-left: -1.5rem;
-content: "- ";
-
-} */
 
 .sub-menu-container {
+  /* display:flex;
+  flex-direction: column; */
   margin-bottom: 1rem;
 }
 
 .sub-menu-container li{
+  
   margin-left: -1.0rem;
   }
+
+.edit-button, .delete-button{
+  color:white;
+  background-color: blue;
+  position:absolute;
+  right: 10px;
+  width : 40px;
+  height: 25px;
+  font-size: 12px;
+  
+  font-family: 'KBO-Dia-Gothic_bold';
+
+
+  background-color: ivory;
+  border-radius: 15%;
+}
+
+.edit-button{
+  background-color: #04a2e0;
+  font-size: 14px;
+  width:44px;
+  right: 8px;
+}
+
+.delete-button{
+  
+  background-color: red;
+}
+
+
+.add-button{
+  margin-top: 2rem;
+  width:50%;
+  font-family: 'KBO-Dia-Gothic_bold';
+  font-size: 16px;
+}
 
 .sub-menu-container li input[type="checkbox"] {
   display: inline-block;
@@ -279,45 +288,7 @@ content: "- ";
   vertical-align: middle;
 }
 
-.event-detail-modal .modal-close:hover {
-  color: #333;
-}
 
-/* Style for modal body */
-.event-detail-modal .modal-body {
-  font-size: 1rem;
-  color: #333;
-}
-
-/* Style for modal input */
-.event-detail-modal .modal-input {
-  display: block;
-  width: 100%;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-  color: #333;
-}
-
-/* Style for modal button */
-.event-detail-modal .modal-button {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #fff;
-  background-color: #007bff;
-  cursor: pointer;
-}
-
-/* Style for modal button:hover */
-.event-detail-modal .modal-button:hover {
-  background-color: #0069d9;
-}
 
 
 .notification-list {
@@ -406,10 +377,52 @@ content: "- ";
 }
 
 
+#check-delete{
+  align-items: center;
+  height: 200px;
+  width:250px;
+  display: flex;
+  flex-direction: column;
+  border : 30px solid #0d1e30;
+  border-radius: 10%;
+  
+  z-index: 100;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* padding : 20px; */
+  transform: translate(-50%, -50%);
+  background-color: #0d1e30;
+  color : white; 
+}
+
+
+
+#check-delete #button-accept{
+  width:70px;
+  height: 40px;
+  font-size: 24px;
+  background-color: #04A2E0;
+  font-family: 'KBO-Dia-Gothic_bold';
+  margin:10px;
+  color:white;
+}
+
+
+
+#check-delete #button-reject{
+  width:70px;
+  height: 40px;
+  font-size: 24px;
+  background-color: #ff2a0e;
+  font-family: 'KBO-Dia-Gothic_bold';
+  margin:10px;
+  color:white;
+}
 
 @font-face {
-  font-family: 'OAGothic-ExtraBold';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/OAGothic-ExtraBold.woff2') format('woff2');
-  font-weight: 800;
+  font-family: 'KBO-Dia-Gothic_bold';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/KBO-Dia-Gothic_bold.woff') format('woff');
+  font-weight: 500;
   font-style: normal;
 }

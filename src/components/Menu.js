@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
-import Group from './Group';
+// import Group from './Group';
 
-function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
+function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Personal,events,setEvents}) {
   const token = localStorage.getItem('token');
   const API_GROUP = 'http://13.209.48.48:8080/api/groups';
   const API_SCHEDULE = 'http://13.209.48.48:8080/api/schedules';
@@ -11,10 +11,13 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
   const [showGroupList, setShowGroupList] = useState(false);
   const [showAddGroup, setShowAddGroup] = useState(false);
   const [showEditGroup, setShowEditGroup] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showAddButton, setShowAddButton] = useState(true);
   const [groupName, setGroupName] = useState('');
   const [groups, setGroups] = useState([]);
   const [memberIds, setMemberIds] = useState([]);
-  const [selectedGroup, setSelectedGroup] = useState(null);
+  // const [selectedGroup, setSelectedGroup] = useState([]);
+  const [deleteGroup, setDeleteGroup] = useState('');
   const [schedules, setSchedules] = useState([]);
   const [showPersonalSchedule, setShowPersonalSchedule] = useState(true);
   const [isKakaoShare, setKakaoShare] = useState(true);
@@ -31,10 +34,20 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
 
   const handleGroupClick = () => {
     setShowGroupList(!showGroupList);
+    if(!showGroupList) {
+      setShowEditGroup(false);
+      setShowDeleteModal(false)
+    }
+    // console.log(showGroupList);
   };
 
   const handleAddGroupClick = () => {
     setShowAddGroup(!showAddGroup);
+    setShowAddButton(!showAddButton);
+  };
+
+  const handleAddButtonClick = () => {
+    setShowAddButton(!showAddButton);
   };
 
   const handleEditGroupClick = () => {
@@ -67,34 +80,57 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
         },
       })
       .then((response) => {
-        const newGroup = {
-          name: response.data.name
-        };
+        console.log(response);
         setGroupName('');
         setShowAddGroup(false);
         setMemberIds('');
+        // LoadGroups();
+        setGroupMember(response.data.id);
+        // console.log(response.id)
+        
       })
       .catch((error) => {
         console.error(error);
       });
+      console.log("생성")
   };
+
+  const setGroupMember=(groupId)=>{
+    axios.post(`http://13.209.48.48:8080/api/groups/${groupId}/members`, {
+      id: localStorage.getItem('userId')
+    }, {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      },
+    })
+    .then((response) => {
+      LoadGroups();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+    console.log("생성")
+  }
+
 
   const handleDeleteGroupSubmit = (groupId) => {
   
-    axios.delete(`http://13.209.48.48:8080//api/groups/${groupId}`, {
+    axios.delete(`http://13.209.48.48:8080/api/groups/${groupId}`, {
         headers: {
           'Authorization': 'Bearer ' + token
         },
       })
       .then((response) => {
         LoadGroups();
+        setShowDeleteModal(false);
+        console.log("Delete 실행")
       })
       .catch((error) => {
         console.error(error);
       });
   };
-
-  const LoadGroups = () => {
+  
+    const LoadGroups = () => {
     axios
       .get("http://13.209.48.48:8080/api/groups/mygroups", {
         headers: {
@@ -102,32 +138,44 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
         },
       })
       .then((response) => {
-
+        // console.log(localStorage.getItem('userId'))
         setGroups(response.data);
         Groups(response.data);
-        console.log(groups);
+        console.log(response.data);
       })
       .catch((error) => {
         console.error(error);
       });
   };
 
+ 
 
-// useEffect(()=>{
-//   LoadGroups();
-// },[])
+  // useEffect(() => {
+  //   if(selectedGroup){
+  //     handleSelectedGroupEvents()
+  //   }
+  // }, [selectedGroup]);
+
+
+useEffect(()=>{
+  LoadGroups();
+},[])
 
   const handleGroupCheckboxChange = (event, group) => {
-    if (event.target.checked) {
-      setSelectedGroup(group);
-      console.log(group);
-      onSelectGroup(group);
+    const isChecked = event.target.checked;
+
+    if (isChecked) {
+      handleSelectedGroup((prevSelected) => [...prevSelected, group]);
     } else {
-      setSelectedGroup(null);
-      onSelectGroup(null);
-      console.log(group);
+      handleSelectedGroup((prevSelected) =>
+        prevSelected ? prevSelected.filter((selected) => selected.id !== group.id) : []
+      );
     }
   };
+
+  useEffect(()=>{
+    console.log(selectedGroup);
+  },[selectedGroup])
 
   const handlePersonalScheduleCheckboxChange = (event) => {
     console.log(event.target.checked);
@@ -135,11 +183,29 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
     Personal(showPersonalSchedule);
   };
 
-{/* <button type="submit" onClick={handleDeleteGroupSubmit}>
-                        삭제
-                      </button> */}
+
+  useEffect(()=>{
+    console.log(showPersonalSchedule);
+  },[showPersonalSchedule])
+
+
+  const checkDeleteGroupSubmit = (group) => {
+    setShowDeleteModal(true);
+    setDeleteGroup(group)
+  };
 
   return (
+    <>
+    {showDeleteModal && (
+        <div id='check-delete' className="modal">
+          <h2>선택 그룹 : {deleteGroup.name}</h2>
+          <h3>삭제하시겠습니까?</h3>
+          <div className='button-row'>
+            <button id='button-accept' onClick={() => handleDeleteGroupSubmit(deleteGroup.id)}>삭제</button>
+            <button id='button-reject' onClick={() => setShowDeleteModal(false)}>취소</button>
+          </div>
+        </div>
+    )}
     <div className={`menu-container ${isOpen ? 'open' : ''}`}>
       <div className="menu-title">
         <h2>Menu</h2>
@@ -151,12 +217,12 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
           </NavLink>
         </li>
         <li>
-          <li onClick={handleGroupClick} style={{ padding: '0px', margin: '0px' }}>
+          <li onClick={()=>{handleGroupClick(); LoadGroups();}} style={{ padding: '0px', margin: '0px' }}>
             Group
           </li>
           {showGroupList && (
             <div style={{ paddingLeft: '0px' }} className="sub-menu-container">
-              <button className="add-button" onClick={handleEditGroupClick}>
+              <button className="edit-button" onClick={handleEditGroupClick}>
                 편집
               </button>
               <button className="add-button" onClick={handleKakaoShareClick}>
@@ -173,26 +239,32 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
                     나의 일정
                   </label>
                 </li>
-                {groups.map((group) => (
+                 {groups.map((group) => (
                   <li style={{ fontSize: '14px' }} key={group.name}>
                     <label>
                       <input
                         type="checkbox"
-                        checked={selectedGroup?.name === group.name}
+                        checked={selectedGroup.some((selected) => selected.id === group.id)}
                         onChange={(event) => handleGroupCheckboxChange(event, group)}
                       />
                       {group.name}
-                      <button className="add-button" onClick={handleAddGroupClick}>
-                      삭제
-                    </button>
                     </label>
+                    {showEditGroup && (
+                      <>
+                        <button className="delete-button" onClick={() => checkDeleteGroupSubmit(group)}>
+                          삭제
+                        </button>
+                      </>
+                    )}
                   </li>
                 ))}
                 {showEditGroup && (
-                  <div>
-                    <button className="add-button" onClick={handleAddGroupClick}>
-                      +
-                    </button>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    {showAddButton && (
+                      <button className="add-button" onClick={handleAddGroupClick}>
+                        그룹 추가
+                      </button>
+                    )}
                     {showAddGroup && (
                       <li style={{ marginTop: '-1rem' }}>
                         <form onSubmit={handleAddGroupSubmit}>
@@ -203,48 +275,32 @@ function Menu({ isOpen, onClose, onSelectGroup, Groups, Personal}) {
                             onChange={handleGroupNameChange}
                             style={{ width: '150px' }}
                           />
-                          <input
-                            type="text"
-                            placeholder="Enter ID for share"
-                            value={memberIds}
-                            onChange={handleMemberIdsChange}
-                            style={{ width: '150px' }}
-                          />
-                          <button type="submit">생성</button>
+                          <button type="submit" onClick={() => setShowAddButton(true)}>
+                            생성
+                          </button>
                           <button type="button" onClick={handleAddGroupClick}>
                             취소
                           </button>
-                          
                         </form>
                       </li>
                     )}
-                    
                   </div>
                 )}
-                
               </ul>
             </div>
           )}
         </li>
+        
         <li>
           <NavLink exact to="/schedule" activeClassName="active" onClick={onClose}>
             Schedule
           </NavLink>
         </li>
       </ul>
-
-      {schedules.length > 0 && (
-        <div>
-          <h3>Selected Schedules</h3>
-          <ul>
-            {schedules.map((schedule) => (
-              <li key={schedule.id}>{schedule.title}</li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
+    </>
   );
+  
 }
 
 export default Menu;

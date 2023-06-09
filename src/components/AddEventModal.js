@@ -41,6 +41,8 @@ function AddEventModal({ onAddEventSubmit, onClose, isOpen, groups}) {
   };
 
   return (
+
+    
     <Modal className={"add-modal"} isOpen={isOpen} onRequestClose={onClose}>
       <form className="add-events-modal" onSubmit={handleSubmit}>
         <label htmlFor="title">일정 제목 : </label>

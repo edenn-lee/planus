@@ -23,9 +23,22 @@ function LoginPage(props) {
     } catch (error) {
       console.error(error);
     }
-    
-    
+
+    try {
+      const response = await axios.get('http://13.209.48.48:8080/member/me', {
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+      }, );
+      console.log(response);
+      localStorage.setItem('userId',response.data.id);
+      console.log(localStorage.getItem('userId'))
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -42,7 +55,7 @@ function LoginPage(props) {
   return (
     
   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' , flexDirection:'column'}}>
-    <img src='/planus-logo.png' alt='Planus Logo' style={{paddingBottom:'5rem'}}/>
+    <img src='/planus-logo.png' alt='Planus Logo' style={{paddingBottom:'5rem' ,width:"100%",height:"30%"}}/>
     <div style={{ textAlign: 'center' }}>
       <form id="login" onSubmit={handleSubmit}>
         <input
