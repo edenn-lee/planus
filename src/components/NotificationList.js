@@ -40,7 +40,7 @@ function NotificationList() {
 
 
       }).catch(error => console.log(error));
-  }, [messages]);
+  }, []);
 
   const handleAccept = (sharedScheduleId) => {
     // const data = {sharedScheduleId: messageId}

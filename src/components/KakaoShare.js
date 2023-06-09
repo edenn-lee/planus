@@ -25,7 +25,9 @@ const { Kakao } = window;
     },[]);
 
     const shareKakao = () =>{
-      onShare();
+      if (onShare && typeof onShare === "function") {
+        onShare();
+      }
 
 Kakao.Share.createDefaultButton({
   
@@ -58,7 +60,9 @@ Kakao.Share.createDefaultButton({
           <button 
               id="kakaotalk-sharing-btn"
               className='share-button'
-              onClick={shareKakao}>
+              onClick={shareKakao}
+              disabled={isButtonDisabled}>
+              
           공유 </button>
       </>
   )
