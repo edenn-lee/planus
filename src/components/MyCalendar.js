@@ -40,6 +40,7 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents}) {
           end: new Date(data.endDateTime),
           content: data.content
         };
+        
         const updatedEvents = [...events, newEvent];
         setEvents(updatedEvents);
         setShowAddEventModal(false);
@@ -181,6 +182,11 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents}) {
     eventsUpdate();
   }, []);
 
+  // const handlePatchUpdate = () => {
+  //   eventsUpdate();
+  //   handleSelectedGroupEvents();
+  // }
+
   useEffect(() => {
     handleSelectedGroupEvents();
   }, [selectedGroup,Personal]);
@@ -202,14 +208,15 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents}) {
     }
     setSelectedEvent(event);
     setShowEventDetailModal(true);
+
     console.log(event);
   };
   
 
-const handleEditClick = (data) => {
-  if(data.shared) {
-    console.log("단일공유");
-    axios.patch(`http://13.209.48.48:8080/api/schedules/shared?sharedWithIds=${data.shared}`, data, {
+const handleEditClick = (event) => {
+  if(event.shared) {
+    console.log("단일공유수정");
+    axios.patch(`http://13.209.48.48:8080/api/schedules/shared?sharedWithIds=${event.shared}`, event, {
       headers: {
         'Authorization': 'Bearer ' + token,
       }
@@ -217,37 +224,47 @@ const handleEditClick = (data) => {
     .then(response => {
       
       const newEvent = {
-        ...data,
+        ...event,
         id: response.data.id.toString(),
-        start: new Date(data.startDateTime),
-        end: new Date(data.endDateTime),
-        content: data.content
+        start: new Date(event.startDateTime),
+        end: new Date(event.endDateTime),
+        content: event.event
       };
       const updatedEvents = [...events, newEvent];
       setEvents(updatedEvents);
       setShowAddEventModal(false);
+      handleSelectedGroupEvents();
       console.log(events);
     })
     
     .catch(error => {
       console.error(error);
     });
+    
   }
-  else if(data.groupId){
-    console.log("그룹공유");
-    console.log(data.groupId);
-      axios.patch(`http://13.209.48.48:8080/api/groups/${data.groupId}/schedules`, {
-
-        title: data.title,
-        startDateTime: data.startDateTime,
-        endDateTime: data.endDateTime
+  else if(event.groupId){
+    console.log("그룹공유수정");
+    console.log(event.groupId);
+      axios.patch(`http://13.209.48.48:8080/api/groups/${event.groupId}/schedules/${event.id}`, {
+        // content:event.content,
+        title: event.title,
+        startDateTime: event.startDateTime,
+        endDateTime: event.endDateTime
       }, {
         headers: {
           'Authorization': 'Bearer ' + token,
         }
       })
       .then(response => {
-        handleSelectedGroupEvents()
+        const newEvent = {
+          ...event,
+          id: response.data.id.toString(),
+          start: new Date(event.startDateTime),
+          end: new Date(event.endDateTime),
+          content: event.content
+        };
+        const updatedEvents = [...events, newEvent];
+        setEvents(updatedEvents);
         console.log(events);
       })
       .catch(error => {
@@ -256,26 +273,22 @@ const handleEditClick = (data) => {
   }
 
   else {
-    console.log("개인일정");
-    axios.patch(API_CALENDAR, data, {
+    console.log("개인일정수정");
+    axios.patch(`http://13.209.48.48:8080/api/schedules/${event.id}`, event, {
       headers: {
         'Authorization': 'Bearer ' + token
       }
     })
     .then(response => {
-      console.log(data.shared);
       const newEvent = {
-        ...data,
+        ...event,
         id: response.data.id.toString(),
-        start: new Date(data.startDateTime),
-        end: new Date(data.endDateTime),
-        content: data.content
+        start: new Date(event.startDateTime),
+        end: new Date(event.endDateTime),
+        content: event.content
       };
       const updatedEvents = [...events, newEvent];
       setEvents(updatedEvents);
-      
-      setShowAddEventModal(false);
-
       console.log(events)
       
     })
@@ -292,6 +305,7 @@ const handleEditEvent=()=>{
 
 const handleDeleteClick = (event) => {
   if(event.groupId){
+    console.log("그룹일정삭제");
     axios.delete(`http://13.209.48.48:8080/api/groups/${event.groupId}/schedules/${event.id}`,{
       headers: {
           'Authorization': 'Bearer ' + token,
@@ -306,8 +320,9 @@ const handleDeleteClick = (event) => {
     })
     .catch(error => console.log(error));
   }
-  else{
-    axios.delete(`${API_CALENDAR}/${event.id}`, {
+  else {
+    console.log("개인일정삭제")
+    axios.delete(`http://13.209.48.48:8080/api/schedules/${event.id}`, {
       headers: {
         'Authorization': 'Bearer ' + token
       }
@@ -319,6 +334,7 @@ const handleDeleteClick = (event) => {
       // saveEventsToLocalStorage(newEvents); // 로컬 스토리지에 저장
       setSelectedEvent(null);
       setShowEventDetailModal(false);
+      console.log("test");
     })
     .catch(error => {
       console.error(error);
@@ -389,6 +405,7 @@ const handleDeleteClick = (event) => {
               groups={Groups}
               hide = {()=>setShowEventDetailModal(false)}
               handleEditSubmit={handleEditClick}
+              eventsUpdate={()=>{handleSelectedGroupEvents();}}
             />
           )}
     </>

@@ -46,6 +46,9 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
     }
   };
 
+  // const handle
+
+
   return (
     <>
       <Modal show={show}
