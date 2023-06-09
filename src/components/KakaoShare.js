@@ -25,7 +25,7 @@ Kakao.Share.createDefaultButton({
     container: '#kakaotalk-sharing-btn',
     objectType: 'calendar',
     idType: 'event',
-    id: 123,
+    id: '1@1',
     content: {
       title: 'Planus',
       description: 'Planus에서 일정 공유에 초대합니다.',
@@ -51,6 +51,7 @@ Kakao.Share.createDefaultButton({
 return(
     <>
         <button 
+        id = 'kakaotalk-sharing-btn'
             className='grey-btn'
             onClick={() => {
                 shareKakao()
