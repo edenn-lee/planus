@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
+import KakaoShare from "./KakaoShare";
+
 // import Group from './Group';
 
 function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Personal,events,setEvents}) {
@@ -22,6 +24,11 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
   const [showPersonalSchedule, setShowPersonalSchedule] = useState(true);
   const [isKakaoShare, setKakaoShare] = useState(true);
 
+
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const handleShare = () => {
+    setButtonDisabled(true);
+  }
   // useEffect(() => {
   //   if (selectedGroup) {
   //     // 선택한 그룹의 일정을 가져오는 함수
@@ -247,6 +254,12 @@ useEffect(()=>{
                       />
                       {group.name}
                     </label>
+
+                    <KakaoShare isButtonDisabled={buttonDisabled}  onShare={{handleShare}}>
+                      
+                      
+                    </KakaoShare>
+
                     {showEditGroup && (
                       <>
                         <button className="delete-button" onClick={() => checkDeleteGroupSubmit(group)}>

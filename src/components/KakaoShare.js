@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import './KakaoShare.css';
 // kakao 기능 동작을 위해 넣어준다.
 
-const KaKaoShare = () =>  {
+const KaKaoShare = ({isButtonDisabled, onShare}) =>  {
 const { Kakao } = window;
 
 
@@ -17,24 +17,25 @@ const { Kakao } = window;
     	// init 해주기 전에 clean up 을 해준다.
         Kakao.cleanup();
         // 자신의 js 키를 넣어준다.
+        if(!Kakao.isInitialized()){
         Kakao.init('39a64d718f961c83556cf74da18b6dd4');
+        };
         // 잘 적용되면 true 를 뱉는다.
         console.log(Kakao.isInitialized());
     },[]);
 
     const shareKakao = () =>{
-
+      onShare();
 
 Kakao.Share.createDefaultButton({
+  
     container: '#kakaotalk-sharing-btn',
-    objectType: 'calendar',
-    idType: 'event',
-    id: '1@1',
+    objectType: 'feed',
     content: {
       title: 'Planus',
       description: 'Planus에서 일정 공유에 초대합니다.',
       imageUrl:
-        'https://drive.google.com/file/d/1g8KcxD50eYLGDEPKRbhUVb8xYXeLYrfv/view?usp=drive_link',
+        'https://postfiles.pstatic.net/MjAyMzA2MDlfMjgx/MDAxNjg2MzE5MzU3ODY5.corFgvtwwadfGjqOkgO79YFMTC4qgfeT2QOkNC5VcDYg.4bj1IWgyKH14pK8TYYkiIqdo8M4F-BCvasb8xZPbK5Ig.PNG.xortlsrkdfla/logo.png?type=w580',
       link: {
         webUrl: 'http://223.222.183.111:3000/login',
         mobileWebUrl: 'http://223.222.183.111:3000/login',
@@ -42,7 +43,7 @@ Kakao.Share.createDefaultButton({
     },
     buttons: [
       {
-        title: 'Planus에서 당신을 초대합니다.',
+        title: '참여하기',
         link: {
           webUrl: 'http://223.222.183.111:3000/login',
           mobileWebUrl: 'http://223.222.183.111:3000/login',
@@ -56,12 +57,9 @@ Kakao.Share.createDefaultButton({
       <>
           <button 
               id="kakaotalk-sharing-btn"
-              className='grey-btn'
-              onClick={() => {
-                  shareKakao()
-              }}> 
-
-          카카오톡 공유하기 </button>
+              className='share-button'
+              onClick={shareKakao}>
+          공유 </button>
       </>
   )
 }
