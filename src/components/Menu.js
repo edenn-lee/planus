@@ -225,9 +225,7 @@ useEffect(()=>{
               <button className="edit-button" onClick={handleEditGroupClick}>
                 편집
               </button>
-              <button className="add-button" onClick={handleKakaoShareClick}>
-                공유
-              </button>
+
               <ul style={{ paddingLeft: '1rem' }}>
                 <li style={{ fontSize: '18px' }}>
                   <label>
