@@ -140,15 +140,15 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
           })
           .then(response => {
             console.log(response);
-              const Events = response.data.map(event => ({
-              ...event,
-              id: event.id.toString(),
-              start: new Date(event.startDateTime[0], event.startDateTime[1] - 1, event.startDateTime[2], event.startDateTime[3], event.startDateTime[4]),
-              end: new Date(event.endDateTime[0], event.endDateTime[1] - 1, event.endDateTime[2], event.endDateTime[3], event.endDateTime[4]),
-              title: event.title,
-              content: event.content,
-              groupId:event.groupId
-            }));
+            const Events = response.data.map(event => ({
+            ...event,
+            id: event.id.toString(),
+            start: new Date(event.startDateTime[0], event.startDateTime[1] - 1, event.startDateTime[2], event.startDateTime[3], event.startDateTime[4]),
+            end: new Date(event.endDateTime[0], event.endDateTime[1] - 1, event.endDateTime[2], event.endDateTime[3], event.endDateTime[4]),
+            title: event.title,
+            content: event.content,
+            groupId:event.groupId
+          }));
             setEvents((prevEvents) => [...prevEvents, ...Events]);
           })
           .catch(error => console.log(error));
@@ -193,7 +193,7 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
 
   useEffect(() => {
     eventsUpdate();
-    handleSelectedGroupEvents();
+    // handleSelectedGroupEvents();
     handleIsAccepted(false);
     console.log("공유후 일정 업데이트")
   }, [isAccepted]);
