@@ -9,7 +9,7 @@ import Notification from './Notification';
 import EditEventModal from './EditEventModal';
 
 
-function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents}) {
+function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccepted, handleIsAccepted}) {
 
   const API_CALENDAR = 'http://13.209.48.48:8080/api/schedules';
   const API_USER = 'http://13.209.48.48:8080/api/schedules/user'
@@ -190,6 +190,13 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents}) {
   useEffect(() => {
     handleSelectedGroupEvents();
   }, [selectedGroup,Personal]);
+
+  useEffect(() => {
+    eventsUpdate();
+    handleSelectedGroupEvents();
+    handleIsAccepted(false);
+    console.log("공유후 일정 업데이트")
+  }, [isAccepted]);
 
   // useEffect(() => {
   //   console.log("Personal Change")

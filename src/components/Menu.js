@@ -143,21 +143,11 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
       });
   };
 
- const setSharedData = () => {
-  const data = groups.find((group)=>group.id===56)
-  console.log(data);
- }
-
-//  useEffect(()=>{
-//   setSharedData();
-//  },[LoadGroups])
-
   // useEffect(() => {
   //   if(selectedGroup){
   //     handleSelectedGroupEvents()
   //   }
   // }, [selectedGroup]);
-
 
 useEffect(()=>{
   LoadGroups();

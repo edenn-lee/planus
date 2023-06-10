@@ -42,16 +42,24 @@ function App() {
   const [showPersonalSchedule, setShowPersonalSchedule] = useState(true);
   const [isKakaoShare, setKakaoShare]= useState(false);
   const [events, setEvents] = useState([]);
-
+  const [messages, setMessages] = useState([]);
 
   const handleSetEvents = (events) => {
     setEvents(events);
     // console.log(events);
   }
 
+  const handleIsAccepted = (state) => {
+    setisAccepted(state);
+  }
+
   const handleSelectedGroup = (group) => {
     setSelectedGroup(group);
   };
+
+  const handleMessages = (messages) => {
+    setMessages(messages);
+  }
 
   const handleGroups = (groups) => {
     setGroups(groups);
@@ -107,17 +115,24 @@ function App() {
           <MenuButton onClick={handleMenuToggle} />
 
           <Menu isOpen={menuOpen}
-          handleSelectedGroup={handleSelectedGroup}
-          selectedGroup={selectedGroup}
-          Groups={handleGroups}
-          Personal={handlePersonalScheduleCheckboxChange}
-          events = {events}
-          setEvents={handleSetEvents}/>
+            handleSelectedGroup={handleSelectedGroup}
+            selectedGroup={selectedGroup}
+            Groups={handleGroups}
+            Personal={handlePersonalScheduleCheckboxChange}
+            events = {events}
+            setEvents={handleSetEvents}/>
 
           {isAuthenticated ? <p style={{fontSize:'15px'}}>user : {localStorage.getItem('user')}</p> : null}
           <h1 id="planus-title">Planus</h1>
           <NotificationButton onClick={handleNotificationToggle}/>
-          <Notification isOpen={notificationOpen} handleclose={handleNotificationClose} isAccepted={true}/>
+          <Notification
+            isOpen={notificationOpen}
+            handleclose={handleNotificationClose}
+            isAccepted={isAccepted}
+            setIsAccepted={()=>handleIsAccepted}
+            messages={messages}
+            setMessages={handleMessages}
+            events={events}/>
           <KakaoShare isOpen ={handleKakaoShare} handleclose = {handleKakaoShareClose} isAccepted={true}/>
         </header>
 
@@ -126,11 +141,13 @@ function App() {
             <Route path="/login" element={<LoginPage setIsAuthenticated={setIsAuthenticated} IsAuthenticated={isAuthenticated}/>} />
             <Route path="/mycalendar" element={isAuthenticated ?
             <MyCalendar
-            selectedGroup={selectedGroup}
-            Groups={groups}
-            Personal={showPersonalSchedule}
-            events={events}
-            setEvents={handleSetEvents}/>
+              handleIsAccepted={handleIsAccepted}
+              isAccepted={isAccepted}
+              selectedGroup={selectedGroup}
+              Groups={groups}
+              Personal={showPersonalSchedule}
+              events={events}
+              setEvents={handleSetEvents}/>
             : <Navigate to="/login" />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/" element={<Navigate to={redirectPath} />} />
