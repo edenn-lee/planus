@@ -32,8 +32,16 @@ function NotificationList(isOpen,setIsAccepted,isAccepted, sharedCodee, emaill) 
       // console.log(filteredMessages);
     }).catch(error => console.log(error));
 
+//메시지로 온 공유코드 승인
+     axios.get(`http://13.209.48.48:8080/accept/message?sharedCode=${sharedCodee}&email=${emaill}`,{
+      headers: {
+        'Authorization' : 'Bearer' + token,
+      }
+     })
+     .then(response=>{
+        console.log(response);
 
-    axios.get(`http://13.209.48.48:8080/accept/message?sharedCode=${sharedCodee}&email=${emaill}`)
+     }).catch(error => console.log(error));
 
 
     

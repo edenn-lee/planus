@@ -245,7 +245,6 @@ useEffect(() => {
 
   return (
     <>
-    <NotificationList sharedCodee = {sharedCode}></NotificationList>
 
     {showDeleteModal && (
         <div id='check-delete' className="modal">
@@ -299,11 +298,6 @@ useEffect(() => {
                       {group.name}
                     </label>
 
-                    <KakaoShare isButtonDisabled={buttonDisabled}  onShare={{handleShare}} propss = {sharedCode}>
-                      
-                      
-                    </KakaoShare>
-
                     {showEditGroup && (
                       <>
                         <button className="delete-button" onClick={() => checkDeleteGroupSubmit(group)}>
@@ -351,6 +345,12 @@ useEffect(() => {
             Schedule
           </NavLink>
         </li>
+
+        <li><KakaoShare isButtonDisabled={buttonDisabled}  onShare={{handleShare}} propss = {sharedCode}/>
+
+        
+        </li>
+
 
         <li>
           <div className='modal-container'>

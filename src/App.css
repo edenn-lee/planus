@@ -242,17 +242,19 @@ ul.menu-content li a {
   }
 
 .share-button{
+  
   color:white;
   background-color: blue;
   position:absolute;
-  right: 55px;
-  width : 40px;
-  height: 25px;
-  font-size: 12px;
-  
+  right: 60px;
+  width : 115px;
+  height: 40px;
+  font-size: 16px;
+  border-radius: 4px;
   font-family: 'KBO-Dia-Gothic_bold';
+  margin-right: 15px;
 }
-  
+
 .edit-button, .delete-button{
   color:white;
   background-color: blue;

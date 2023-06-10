@@ -36,7 +36,7 @@ function AddEventModal({ onAddEventSubmit, onClose, isOpen, groups}) {
     setEndDateTime("");
     setShared("");
     setAllDay(false);
-
+    // setGroupId(null);
     onClose();
   };
 

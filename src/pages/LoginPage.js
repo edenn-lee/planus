@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, Navigate } from 'react-router-dom';
+import NotificationList from '../components/NotificationList';
 // import '../App.css';
 function LoginPage(props) {
   const [email, setEmail] = useState('');
@@ -53,7 +54,7 @@ function LoginPage(props) {
   }
 
   return (
-    
+   <>
   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' , flexDirection:'column'}}>
     <img src='/planus-logo.png' alt='Planus Logo' style={{paddingBottom:'5rem' ,width:"100%",height:"30%"}}/>
     <div style={{ textAlign: 'center' }}>
@@ -79,7 +80,7 @@ function LoginPage(props) {
         Don't have an account? <Link to="/register">Register</Link>
       </div>
     </div>
-  </div>
+  </div></> 
 );
 
   
