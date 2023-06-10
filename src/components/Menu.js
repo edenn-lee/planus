@@ -4,6 +4,7 @@ import axios from 'axios';
 import KakaoShare from "./KakaoShare";
 import Modal from "react-modal";
 import './Menu.css';
+import NotificationList from './NotificationList';
 // import Group from './Group';
 
 function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Personal,events,setEvents}) {
@@ -225,7 +226,7 @@ useEffect(()=>{
 
   const handleInviteGroup = () => {
     
-    axios.post(`http://13.209.48.48:8080/group/accept?sharedCode=${sharedCode}`, {
+    axios.post(`http://13.209.48.48:8080/group/accept?sharedCode=${sharedCode}`,[] ,{
         headers: {
           'Authorization': 'Bearer ' + token
         },
@@ -254,6 +255,8 @@ useEffect(() => {
 
   return (
     <>
+    <NotificationList sharedCodee = {sharedCode}></NotificationList>
+
     {showDeleteModal && (
         <div id='check-delete' className="modal">
           <h2>선택 그룹 : {deleteGroup.name}</h2>
@@ -306,7 +309,7 @@ useEffect(() => {
                       {group.name}
                     </label>
 
-                    <KakaoShare isButtonDisabled={buttonDisabled}  onShare={{handleShare}}>
+                    <KakaoShare isButtonDisabled={buttonDisabled}  onShare={{handleShare}} propss = {sharedCode}>
                       
                       
                     </KakaoShare>

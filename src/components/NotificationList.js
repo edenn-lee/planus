@@ -9,7 +9,7 @@ const API_MESSAGE_LIST = `http://13.209.48.48:8080/api/messages/received/`
 
 
 
-function NotificationList() {
+function NotificationList(sharedCodee,emaill) {
   const [messages, setMessages] = useState([]);
   const token = localStorage.getItem('token');
 
@@ -37,6 +37,12 @@ function NotificationList() {
       setMessages(filteredMessages);
       // console.log(filteredMessages);
     }).catch(error => console.log(error));
+
+
+    axios.get(`http://13.209.48.48:8080/accept/message?sharedCode=${sharedCodee}&email=${emaill}`)
+
+
+    
   }
 
   useEffect(() => {
@@ -72,6 +78,10 @@ function NotificationList() {
     const rejectedMessage = messages.find((message) => message.id === id);
     console.log(`메시지 "${rejectedMessage.content}"가 거절되었습니다.`);
   };
+
+
+
+
 
   return (
     <div>
