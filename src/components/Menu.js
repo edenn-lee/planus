@@ -89,12 +89,9 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
 
   const handleAddGroupSubmit = (event) => {
     event.preventDefault();
-
-
     const data = {
       name: groupName,
     };
-
     axios.post('http://13.209.48.48:8080/api/groups', data, {
         headers: {
           'Authorization': 'Bearer ' + token
@@ -105,7 +102,7 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
         setGroupName('');
         setShowAddGroup(false);
         setMemberIds('');
-        // LoadGroups();
+        LoadGroups();
         setGroupMember(response.data.id);
         // console.log(response.id)
         
@@ -136,8 +133,8 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
 
   const handleDeleteGroupSubmit = (deleteGroup) => {
     console.log(deleteGroup);
-    
-    if(deleteGroup.ownerId === localStorage.getItem('userId')){
+    if (deleteGroup.ownerId == localStorage.getItem('userId') && deleteGroup.memberIds.length == 1 && deleteGroup.memberIds[0] == localStorage.getItem('userId')) {
+      console.log("일치")
       axios.delete(`http://13.209.48.48:8080/api/groups/owner/${deleteGroup.id}`, {
         headers: {
           'Authorization': 'Bearer ' + token
@@ -152,7 +149,9 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
         console.error(error);
       });
     }
-    axios.delete(`http://13.209.48.48:8080/api/groups/${deleteGroup.id}/members/${deleteGroup.memberIds}`, {
+    else {
+      console.log("불일치")
+      axios.delete(`http://13.209.48.48:8080/api/groups/${deleteGroup.id}/members/${deleteGroup.memberIds}`, {
         headers: {
           'Authorization': 'Bearer ' + token
         },
@@ -165,6 +164,7 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
       .catch((error) => {
         console.error(error);
       });
+    }
   };
   
     const LoadGroups = () => {
@@ -361,8 +361,8 @@ useEffect(() => {
         </li>
         
         <li>
-          <NavLink exact to="/schedule" activeClassName="active" onClick={onClose}>
-            Schedule
+          <NavLink exact to="/TodoList" activeClassName="active" onClick={onClose}>
+            TodoList
           </NavLink>
         </li>
 
