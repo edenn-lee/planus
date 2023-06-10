@@ -3,19 +3,13 @@ import Message from './Message';
 import axios from 'axios';
 import './Notification.css';
 
-
-
-const API_MESSAGE_LIST = `http://13.209.48.48:8080/api/messages/received/`
-
-
-
-function NotificationList(sharedCodee,emaill) {
+function NotificationList(isOpen,setIsAccepted,isAccepted, sharedCodee, emaill) {
   const [messages, setMessages] = useState([]);
   const token = localStorage.getItem('token');
 
 
   const getMessages = () => {
-    axios.get(API_MESSAGE_LIST,{
+    axios.get(`http://13.209.48.48:8080/api/messages/received/`,{
       headers: {
         'Authorization': 'Bearer ' + token,
       }
@@ -47,7 +41,7 @@ function NotificationList(sharedCodee,emaill) {
 
   useEffect(() => {
     getMessages()
-  }, []);
+  }, [isOpen]);
 
   const handleAccept = (message) => {
     // const data = {sharedScheduleId: messageId}
@@ -65,7 +59,10 @@ function NotificationList(sharedCodee,emaill) {
           console.log(response);
           const acceptedMessage = messages.find((message) => message.id === id);
           console.log(`메시지 "${acceptedMessage.content}"가 승인되었습니다.`);
-      
+          getMessages();
+          setIsAccepted(true);
+          console.log(isAccepted);
+          
         })
         .catch(error => console.log(error));
       };

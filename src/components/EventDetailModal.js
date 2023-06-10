@@ -8,17 +8,10 @@ import EditEventModal from './EditEventModal';
 const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, events, setEvents }) => {
   const [images, setImages] = useState(event.images);
   const token = localStorage.getItem('token');
-  
+  const [comments, setComments] = useState([]);
+  const [text, setText] = useState('');
+  const [ScheduleId, setScheduleID] = useState('');
 
-  // const handleEditClick = () => {
-  //   setShowEditEventModal(true);
-  //   console.log(showEditEventModal);
-  // };
-
-//   useEffect(()=>{
-//     console.log("EditEventModal");
-//     console.log(showEditEventModal);
-// },[showEditEventModal])
 
 
   const handleDeleteClick = () => {
@@ -45,9 +38,46 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
       console.error(error);
     }
   };
+  
+  const handleCommntsSubmit = (data) => {
+    axios.get(`http://13.209.48.48:8080/comments`,data, {
+      headers: {
+        'Authorization': 'Bearer ' + token,
+      }
+    })
+    .then(response => {
+      console.log(response);
+      const newComments = {
+        ScheduleId : response.data.ScheduleId,
+        text : response.data.text
+      }
+      setComments((prevComments) => [...prevComments, ...newComments]);
+      console.log(response);
+    })
+    .catch(error => console.log(error));
+  }
 
-  // const handle
+  const handleCommnts = (event) => {
+    axios.get(`http://13.209.48.48:8080/comments/schedule/${event.id}`,{
+      headers: {
+        'Authorization': 'Bearer ' + token,
+      }
+    })
+    .then(response => {
+      console.log(response);
+      const Comments = {
+        ScheduleId : response.data.ScheduleId,
+        text : response.data.text
+      }|| [];
+      setComments((prevComments) => [...prevComments, ...Comments]);
+      console.log(response);
+    })
+    .catch(error => console.log(error));
+  }
 
+  useEffect(() => {
+    handleCommnts(event);
+  }, [])
 
   return (
     <>
@@ -91,8 +121,18 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
             <div className="comment-divider"></div>
             <form className="comment-form">
               <textarea placeholder="댓글을 입력하세요"></textarea>
-              <button type="submit">댓글 작성</button>
+              {/* <button type="submit" onClick={()=>handleCommntsSubmit(data)}>댓글 작성</button> */}
             </form>
+            
+            <div className="comment">
+              {comments.map((comment) => (
+              <p className="content">{comment.text}</p>
+              ))}
+              
+            </div>
+              
+
+          
           </div>
         </Modal.Footer>
           
