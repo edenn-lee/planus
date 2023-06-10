@@ -8,7 +8,7 @@ import NotificationButton from './components/NotificationButton';
 import Notification from './components/Notification';
 import Group from './pages/Group';
 import Setting from './pages/Setting';
-
+import KakaoShare from './components/KakaoShare';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './components/RegisterPage';
 
@@ -122,7 +122,7 @@ function App() {
             messages={messages}
             setMessages={handleMessages}
             events={events}/>
-          <KakaoShare isOpen ={handleKakaoShare} handleclose = {handleKakaoShareClose} isAccepted={true}/>
+
         </header>
 
         <div className="App-body" onClick={handleMenuClose} >

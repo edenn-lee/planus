@@ -296,10 +296,8 @@ useEffect(() => {
                       {group.name}
                     </label>
 
-                    <KakaoShare isButtonDisabled={buttonDisabled}  onShare={{handleShare}}>
-                      
-                      
-                    </KakaoShare>
+                    <KakaoShare isButtonDisabled={buttonDisabled}  onShare={{handleShare}}/>
+             
 
                     {showEditGroup && (
                       <>
