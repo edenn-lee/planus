@@ -1,6 +1,8 @@
 import React from 'react';
 
 function Message({message,onAccept, onReject}) {
+  
+  
   return (
     <div className='message-box'>
       <h4 style={{margin:'0'}}>{message.title}</h4>
@@ -9,6 +11,8 @@ function Message({message,onAccept, onReject}) {
       <button className='accept' onClick={() => onAccept(message)}>승인</button>
       <button className='reject' onClick={() => onReject(message)}>거절</button>
     </div>
+
+    
   );
 }
 
