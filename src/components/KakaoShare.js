@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import './KakaoShare.css';
 // kakao 기능 동작을 위해 넣어준다.
+import Menu from './Menu.js';
 
 const KaKaoShare = ({isButtonDisabled, onShare}) =>  {
 const { Kakao } = window;
@@ -35,7 +36,7 @@ Kakao.Share.createDefaultButton({
     objectType: 'feed',
     content: {
       title: 'Planus',
-      description: 'Planus에서 일정 공유에 초대합니다.',
+      description: `초대코드 : ${Menu.sharedCode}`,
       imageUrl:
         'https://postfiles.pstatic.net/MjAyMzA2MDlfMjgx/MDAxNjg2MzE5MzU3ODY5.corFgvtwwadfGjqOkgO79YFMTC4qgfeT2QOkNC5VcDYg.4bj1IWgyKH14pK8TYYkiIqdo8M4F-BCvasb8xZPbK5Ig.PNG.xortlsrkdfla/logo.png?type=w580',
       link: {

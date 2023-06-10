@@ -34,10 +34,11 @@ function NotificationList() {
       console.log(response);
       const filteredMessages = messages.filter(message => !message.isAccepted);
 
-        setMessages(filteredMessages);
-        // console.log(filteredMessages);
-      }).catch(error => console.log(error));
+      setMessages(filteredMessages);
+      // console.log(filteredMessages);
+    }).catch(error => console.log(error));
   }
+
   useEffect(() => {
     getMessages()
   }, []);

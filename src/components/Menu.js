@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import KakaoShare from "./KakaoShare";
-
+import Modal from "react-modal";
+import './Menu.css';
 // import Group from './Group';
 
 function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Personal,events,setEvents}) {
@@ -23,6 +24,19 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
   const [schedules, setSchedules] = useState([]);
   const [showPersonalSchedule, setShowPersonalSchedule] = useState(true);
   const [isKakaoShare, setKakaoShare] = useState(true);
+
+  const [showModal, setShowModal] = useState(false);
+  const [sharedCode, setSharedCode] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSharedCode('');
+    setErrorMessage('');
+  };
 
 
   const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -208,6 +222,36 @@ useEffect(()=>{
     setDeleteGroup(group)
   };
 
+
+  const handleInviteGroup = () => {
+    
+    axios.post(`http://13.209.48.48:8080/group/accept?sharedCode=${sharedCode}`, {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        LoadGroups();
+        setGroupName('');
+
+        console.log(response.sharedCode);
+        closeModal();
+      })
+      .catch((error) => {
+        setErrorMessage('초대 코드가 일치하지 않습니다.');
+        console.error(error);
+      });
+  };
+
+useEffect(() => {
+  console.log(sharedCode);
+}
+,[sharedCode]) 
+
+
+
+
   return (
     <>
     {showDeleteModal && (
@@ -314,6 +358,23 @@ useEffect(()=>{
             Schedule
           </NavLink>
         </li>
+
+        <li>
+          <div className='modal-container'>
+        <button className='modal-button' onClick={openModal}>초대코드 입력</button>
+        <Modal className="share-modal" isOpen={showModal} onRequestClose={closeModal}>
+          <div className="modal">
+            <div className="modal-content">
+              <h2>초대코드 입력</h2>
+              <input type="text" value={sharedCode} onChange={(e) => setSharedCode(e.target.value)} />
+              {errorMessage && <p className="error-message">{errorMessage}</p>}
+              <button onClick={handleInviteGroup}>코드 입력</button>
+              <button className='cancel-button' onClick={closeModal}>닫기</button>
+            </div>
+          </div>
+        </Modal>
+        </div>
+      </li>
       </ul>
     </div>
     </>
