@@ -39,19 +39,24 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
     }
   };
   
-  const handleCommntsSubmit = (data) => {
-    axios.get(`http://13.209.48.48:8080/comments`,data, {
+  const handleCommntsSubmit = (event) => {
+    // event.preventDefault();
+    console.log(event.id);
+    axios.post(`http://13.209.48.48:8080/comments`,{
+      text: "댓글댓글",
+      scheduleId : event.id
+    }, {
       headers: {
         'Authorization': 'Bearer ' + token,
       }
     })
     .then(response => {
       console.log(response);
-      const newComments = {
-        ScheduleId : response.data.ScheduleId,
-        text : response.data.text
-      }
-      setComments((prevComments) => [...prevComments, ...newComments]);
+      // const newComments = {
+      //   ScheduleId : response.data.ScheduleId,
+      //   text : response.data.text
+      // }
+      // setComments((prevComments) => [...prevComments, ...newComments]);
       console.log(response);
     })
     .catch(error => console.log(error));
@@ -65,12 +70,11 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
     })
     .then(response => {
       console.log(response);
-      const Comments = {
-        ScheduleId : response.data.ScheduleId,
-        text : response.data.text
-      }|| [];
-      setComments((prevComments) => [...prevComments, ...Comments]);
-      console.log(response);
+      // const Comments = {
+      //   ScheduleId : response.data.ScheduleId,
+      //   text : response.data.text
+      // }|| [];
+      // setComments((prevComments) => [...prevComments, ...Comments]);
     })
     .catch(error => console.log(error));
   }
@@ -121,15 +125,39 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
             <div className="comment-divider"></div>
             <form className="comment-form">
               <textarea placeholder="댓글을 입력하세요"></textarea>
-              {/* <button type="submit" onClick={()=>handleCommntsSubmit(data)}>댓글 작성</button> */}
+              <button type="button" onClick={()=>handleCommntsSubmit(event)}>댓글 작성</button>
             </form>
+            {/* {groups.map((group) => (
+                  <li style={{ fontSize: '14px' }} key={group.name}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={selectedGroup.some((selected) => selected.id === group.id)}
+                        onChange={(event) => handleGroupCheckboxChange(event, group)}
+                      />
+                      {group.name}
+                    </label>
+
+                    <KakaoShare isButtonDisabled={buttonDisabled}  onShare={{handleShare}}/>
+             
+
+                    {showEditGroup && (
+                      <>
+                        <button className="delete-button" onClick={() => checkDeleteGroupSubmit(group)}>
+                          삭제
+                        </button>
+                      </>
+                    )}
+                  </li>
+                ))} */}
             
-            <div className="comment">
-              {comments.map((comment) => (
-              <p className="content">{comment.text}</p>
+              {/* {comments.map((comment) => (
+                <div className="comment" key={comment}>
+                  <p className="content">{comment.text}</p>
+                </div>
               ))}
-              
-            </div>
+               */}
+            
               
 
           

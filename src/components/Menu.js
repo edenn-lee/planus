@@ -135,7 +135,23 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
 
 
   const handleDeleteGroupSubmit = (deleteGroup) => {
-    // `http://13.209.48.48:8080/api/groups/owner/${deleteGroup.id}`
+    console.log(deleteGroup);
+    
+    if(deleteGroup.ownerId === localStorage.getItem('userId')){
+      axios.delete(`http://13.209.48.48:8080/api/groups/owner/${deleteGroup.id}`, {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        },
+      })
+      .then((response) => {
+        LoadGroups();
+        setShowDeleteModal(false);
+        console.log("owner Delete 실행")
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    }
     axios.delete(`http://13.209.48.48:8080/api/groups/${deleteGroup.id}/members/${deleteGroup.memberIds}`, {
         headers: {
           'Authorization': 'Bearer ' + token
@@ -296,7 +312,10 @@ useEffect(() => {
                       {group.name}
                     </label>
 
-                    <KakaoShare isButtonDisabled={buttonDisabled}  onShare={{handleShare}}/>
+                    <KakaoShare
+                    isButtonDisabled={buttonDisabled} 
+                    onShare={handleShare}
+                    props={sharedCode}/>
              
 
                     {showEditGroup && (
