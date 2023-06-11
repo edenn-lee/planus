@@ -1,3 +1,62 @@
 .gray-btn{
     background-color: gray;
 }
+
+.select-group-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    border: 5px double darkgray;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    max-width: 90%;
+    z-index: 100;
+  }
+  
+  .select-group-modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .select-group-modal-content h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+  
+  .select-group-modal-content label {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .select-group-modal-content select {
+    width: 200px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  
+  .select-group-modal-content button {
+    width: 200px;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 4px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .select-group-modal-content button:hover {
+    background-color: #45a049;
+  }
+  

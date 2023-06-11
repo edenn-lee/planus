@@ -84,25 +84,26 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
       .catch((error) => console.log(error));
   };
 
-  const handleCommnts = (event) => {
-    axios.get(`http://13.209.48.48:8080/comments/schedule/${event.id}`,{
-      headers: {
-        'Authorization': 'Bearer ' + token,
-      }
-    })
-    .then(response => {
-      console.log(response);
-      // const Comments = {
-      //   ScheduleId : response.data.ScheduleId,
-      //   text : response.data.text
-      // }|| [];
-      // setComments((prevComments) => [...prevComments, ...Comments]);
-    })
-    .catch(error => console.log(error));
-  }
+  useEffect(()=>{
+    console.log(comments);
+  },[comments])
+
+  const handleComments = () => {
+    axios
+      .get(`http://13.209.48.48:8080/comments/schedule/${event.id}`, {
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        setComments(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
 
   useEffect(() => {
-    handleCommnts(event);
+    handleComments(event);
   }, [])
 
 
@@ -149,7 +150,7 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
             <div className="comment-divider"></div>
             <form className="comment-form">
               <textarea placeholder="댓글을 입력하세요"></textarea>
-              <button type="button" onClick={()=>handleCommntsSubmit(event)}>댓글 작성</button>
+              <button type="button" onClick={()=>handleCommentsSubmit(event)}>댓글 작성</button>
             </form>
             {/* {groups.map((group) => (
                   <li style={{ fontSize: '14px' }} key={group.name}>
