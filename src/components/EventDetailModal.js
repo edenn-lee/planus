@@ -1,13 +1,18 @@
 import { Modal, Button, ModalBody } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
+import { useState ,useEffect} from 'react';
 import './EventDetailModal.css';
 import axios from 'axios';
+import EditEventModal from './EditEventModal';
+// import Modal from "react-modal";
 
-const EventDetailModal = ({ showEditEvent, show, event, onClose, onDeleteClick, events, setEvents }) => {
+const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, events, setEvents }) => {
   const [images, setImages] = useState(event.images);
   const token = localStorage.getItem('token');
   const [comments, setComments] = useState([]);
   const [text, setText] = useState('');
+  const [ScheduleId, setScheduleID] = useState('');
+
+
 
   const handleDeleteClick = () => {
     onDeleteClick(event);
@@ -15,96 +20,112 @@ const EventDetailModal = ({ showEditEvent, show, event, onClose, onDeleteClick, 
   const convertBlobToBase64 = (blob) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = reject;
       reader.readAsDataURL(blob);
+      reader.onload = (event) => resolve(event.target.result);
+      reader.onerror = (error) => reject(error);
+      
     });
   };
   const handleImageUpdate = async (event, imageFile) => {
-    try {
-      const formData = new FormData();
-      formData.append('image', imageFile);
-  
-      const response = await axios.patch(`http://13.209.48.48:8080/api/schedules/image/${event.id}`, formData, {
+  try {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    const response = await axios.patch(
+      `http://13.209.48.48:8080/api/schedules/image/${event.id}`,
+      formData,
+      {
         headers: {
           'Authorization': 'Bearer ' + token,
           'Content-Type': 'multipart/form-data',
         },
-      });
-  
-      const updatedEvent = response.data;
-      const imageResponse = await axios.get(updatedEvent.images, { responseType: 'arraybuffer' });
-      const byteArray = new Uint8Array(imageResponse.data);
-      let binaryData = '';
-      byteArray.forEach((byte) => {
-        binaryData += String.fromCharCode(byte);
-      });
-      const base64Image = btoa(binaryData);
-      setImages(`data:${imageResponse.headers['content-type']};base64,${base64Image}`);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleCommentsSubmit = () => {
-    axios
-      .post(
-        `http://13.209.48.48:8080/comments`,
-        {
-          text: text,
-          scheduleId: event.id,
-        },
-        {
-          headers: {
-            'Authorization': 'Bearer ' + token,
-          },
-        }
-      )
-      .then((response) => {
+      }
+    );
         console.log(response);
-        const newComment = {
-          ScheduleId: response.data.ScheduleId,
-          text: response.data.text,
-        };
-        setComments((prevComments) => [...prevComments, newComment]);
-        setText('');
-      })
-      .catch((error) => console.log(error));
-  };
+    const updatedEvent = response.data;
+    const imageResponse = response.data;
+    const arrayBuffer = Uint8Array.from(atob(imageResponse.data), c => c.charCodeAt(0)).buffer;
+    const byteArray = new Uint8Array(arrayBuffer);
+    const blob = new Blob([byteArray], { type: imageResponse.headers['Content-Type'] });
+    const base64Image = await convertBlobToBase64(blob);
+    setImages(base64Image);
 
-  const handleComments = () => {
-    axios
-      .get(`http://13.209.48.48:8080/comments/schedule/${event.id}`, {
-        headers: {
-          'Authorization': 'Bearer ' + token,
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        setComments(response.data);
-      })
-      .catch((error) => console.log(error));
-  };
+    console.log(blob);
+    console.log(byteArray);
+    console.log(imageResponse.data);
+    console.log(imageResponse.headers['Content-Type']);
+    console.log(updatedEvent.images);
+    console.log(base64Image);
+    console.log(response.data.images.imageData);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+  const handleCommntsSubmit = (event) => {
+    // event.preventDefault();
+    console.log(event.id);
+    axios.post(`http://13.209.48.48:8080/comments`,{
+      text: "댓글댓글",
+      scheduleId : event.id
+    }, {
+      headers: {
+        'Authorization': 'Bearer ' + token,
+      }
+    })
+    .then(response => {
+      console.log(response);
+      // const newComments = {
+      //   ScheduleId : response.data.ScheduleId,
+      //   text : response.data.text
+      // }
+      // setComments((prevComments) => [...prevComments, ...newComments]);
+      console.log(response);
+    })
+    .catch(error => console.log(error));
+  }
+
+  const handleCommnts = (event) => {
+    axios.get(`http://13.209.48.48:8080/comments/schedule/${event.id}`,{
+      headers: {
+        'Authorization': 'Bearer ' + token,
+      }
+    })
+    .then(response => {
+      console.log(response);
+      // const Comments = {
+      //   ScheduleId : response.data.ScheduleId,
+      //   text : response.data.text
+      // }|| [];
+      // setComments((prevComments) => [...prevComments, ...Comments]);
+    })
+    .catch(error => console.log(error));
+  }
 
   useEffect(() => {
-    handleComments();
-  }, []);
+    handleCommnts(event);
+  }, [])
+
 
   return (
     <>
-      <Modal show={show} onHide={onClose} className="event-detail-modal">
+      <Modal show={show}
+      onHide={onClose}
+      className="event-detail-modal"
+      >
         <Modal.Header>
           <Modal.Title>{event.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {images && <img src={`${ImageData}`} alt="Not Images" />}
+          {images && <img src={`data:image/jpeg;base64,${images}`} alt="No Images" />}
           {event.content && <p>{event.content}</p>}
           <p>{event.start.toLocaleString()}</p>
           <input type="file" onChange={(e) => handleImageUpdate(event, e.target.files[0])} />
+          
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => { onClose(); showEditEvent(); }}>
+          <Button variant="secondary" onClick={()=>{onClose(); showEditEvent(); }}>
             수정
           </Button>
           <Button variant="danger" onClick={handleDeleteClick}>
@@ -115,27 +136,61 @@ const EventDetailModal = ({ showEditEvent, show, event, onClose, onDeleteClick, 
           </Button>
           <div className="comments-section">
             <h3>댓글</h3>
-            {comments.map((comment) => (
-              <div key={comment.id} className="comment">
-                <span className="author">{comment.memberNickname}</span>
-                <p className="content">{comment.text}</p>
-                {/* <span className="comment-date">{comment.date}</span> */}
-              </div>
-            ))}
+            <div className="comment">
+              <span className="author">John Doe</span>
+              <p className="content">첫 번째 댓글입니다.</p>
+              <span className="comment-date">2023-06-09 14:30</span>
+            </div>
+            <div className="comment">
+              <span className="author">Jane Smith</span>
+              <p className="content">두 번째 댓글입니다.</p>
+              <span className="comment-date">2023-06-09 15:15</span>
+            </div>
             <div className="comment-divider"></div>
             <form className="comment-form">
-              <textarea
-                placeholder="댓글을 입력하세요"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-              ></textarea>
-              <button type="button" onClick={handleCommentsSubmit}>
-                댓글 작성
-              </button>
+              <textarea placeholder="댓글을 입력하세요"></textarea>
+              <button type="button" onClick={()=>handleCommntsSubmit(event)}>댓글 작성</button>
             </form>
+            {/* {groups.map((group) => (
+                  <li style={{ fontSize: '14px' }} key={group.name}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={selectedGroup.some((selected) => selected.id === group.id)}
+                        onChange={(event) => handleGroupCheckboxChange(event, group)}
+                      />
+                      {group.name}
+                    </label>
+
+                    <KakaoShare isButtonDisabled={buttonDisabled}  onShare={{handleShare}}/>
+             
+
+                    {showEditGroup && (
+                      <>
+                        <button className="delete-button" onClick={() => checkDeleteGroupSubmit(group)}>
+                          삭제
+                        </button>
+                      </>
+                    )}
+                  </li>
+                ))} */}
+            
+              {/* {comments.map((comment) => (
+                <div className="comment" key={comment}>
+                  <p className="content">{comment.text}</p>
+                </div>
+              ))}
+               */}
+            
+              
+
+          
           </div>
         </Modal.Footer>
+          
       </Modal>
+
+      
     </>
   );
 };
