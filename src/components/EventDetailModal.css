@@ -1,3 +1,4 @@
+/* EventDetailModal.css */
 .event-detail-modal {
   font-family: 'KBO-Dia-Gothic_bold';
   width: 100%;
@@ -103,6 +104,8 @@
   border: 2px solid gray;
 }
 
+
+
 .comments-section h3 {
   margin-bottom: 5px;
   margin-top: 5px;
@@ -111,6 +114,7 @@
 .comments-section .comment {
   margin-bottom: 5px;
   margin-top: 5px;
+  /* border-bottom:1px dashed black; */
   border-top: 1px dashed black;
 }
 
@@ -120,7 +124,7 @@
 
 .comments-section .comment .content {
   margin-top: 5px;
-  margin-bottom: 0;
+  margin-bottom:0;
 }
 
 .comments-section .comment-form {
