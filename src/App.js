@@ -103,7 +103,8 @@ function App() {
           <Menu isOpen={menuOpen}
             handleSelectedGroup={handleSelectedGroup}
             selectedGroup={selectedGroup}
-            Groups={handleGroups}
+            groups={groups}
+            setGroups={handleGroups}
             Personal={handlePersonalScheduleCheckboxChange}
             events = {events}
             setEvents={handleSetEvents}/>

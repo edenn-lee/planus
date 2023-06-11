@@ -432,6 +432,20 @@ ul.menu-content li a {
   color:white;
 }
 
+.share-button{
+
+  color:white;
+  background-color: blue;
+  position:absolute;
+  right: 60px;
+  width : 115px;
+  height: 40px;
+  font-size: 16px;
+  border-radius: 4px;
+  font-family: 'KBO-Dia-Gothic_bold';
+  margin-right: 15px;
+}
+
 @font-face {
   font-family: 'KBO-Dia-Gothic_bold';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/KBO-Dia-Gothic_bold.woff') format('woff');
