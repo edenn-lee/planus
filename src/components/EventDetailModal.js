@@ -17,28 +17,41 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
   const handleDeleteClick = () => {
     onDeleteClick(event);
   };
-
+  const convertBlobToBase64 = (blob) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
   const handleImageUpdate = async (event, imageFile) => {
     try {
       const formData = new FormData();
       formData.append('image', imageFile);
-
+  
       const response = await axios.patch(`http://13.209.48.48:8080/api/schedules/image/${event.id}`, formData, {
         headers: {
           'Authorization': 'Bearer ' + token,
           'Content-Type': 'multipart/form-data',
         },
       });
-
+  
       const updatedEvent = response.data;
-      setImages(updatedEvent.images);
-      const updatedEvents = events.map((evt) => (evt.id === updatedEvent.id ? updatedEvent : evt));
-      setEvents(updatedEvents);
+      const imageResponse = await axios.get(updatedEvent.images, { responseType: 'arraybuffer' });
+      const byteArray = new Uint8Array(imageResponse.data);
+      let binaryData = '';
+      byteArray.forEach((byte) => {
+        binaryData += String.fromCharCode(byte);
+      });
+      const base64Image = btoa(binaryData);
+      setImages(`data:${imageResponse.headers['content-type']};base64,${base64Image}`);
     } catch (error) {
       console.error(error);
     }
   };
   
+
   const handleCommntsSubmit = (event) => {
     // event.preventDefault();
     console.log(event.id);
@@ -93,7 +106,7 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
           <Modal.Title>{event.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {images && <img src={`data:image/jpeg;base64,${images}`} alt="이미지가업다" />}
+          {images && <img src={`${ImageData}`} alt="Not Images" />}
           {event.content && <p>{event.content}</p>}
           <p>{event.start.toLocaleString()}</p>
           <input type="file" onChange={(e) => handleImageUpdate(event, e.target.files[0])} />
