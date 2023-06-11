@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import './App.css';
 import Menu from './components/Menu';
 import MyCalendar from './components/MyCalendar';
 import MenuButton from './components/MenuButton';
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import NotificationButton from './components/NotificationButton';
 import Notification from './components/Notification';
-import Group from './pages/Group';
-import Setting from './pages/Setting';
-import KakaoShare from './components/KakaoShare';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './components/RegisterPage';
-
+import TodoList from './pages/TodoList';
 import axios from 'axios';
 
 
@@ -138,7 +135,8 @@ function App() {
               events={events}
               setEvents={handleSetEvents}/>
             : <Navigate to="/login" />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/todolist" element={<TodoList/>} />
+            <Route path="/register" element={<RegisterPage/>} />
             <Route path="/" element={<Navigate to={redirectPath} />} />
           </Routes>
         </div>

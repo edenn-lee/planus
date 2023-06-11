@@ -122,7 +122,7 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
         title: event.title,
         content: event.content,
       }));
-
+      console.log(response.data)
       setEvents(getEvents);
       setPersonalEvents(getEvents);
     })
@@ -150,6 +150,7 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
             groupId:event.groupId
           }));
             setEvents((prevEvents) => [...prevEvents, ...Events]);
+            console.log(response.data);
           })
           .catch(error => console.log(error));
     }

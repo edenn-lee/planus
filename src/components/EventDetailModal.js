@@ -1,18 +1,13 @@
 import { Modal, Button, ModalBody } from 'react-bootstrap';
-import { useState ,useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import './EventDetailModal.css';
 import axios from 'axios';
-import EditEventModal from './EditEventModal';
-// import Modal from "react-modal";
 
-const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, events, setEvents }) => {
+const EventDetailModal = ({ showEditEvent, show, event, onClose, onDeleteClick, events, setEvents }) => {
   const [images, setImages] = useState(event.images);
   const token = localStorage.getItem('token');
   const [comments, setComments] = useState([]);
   const [text, setText] = useState('');
-  const [ScheduleId, setScheduleID] = useState('');
-
-
 
   const handleDeleteClick = () => {
     onDeleteClick(event);
@@ -50,58 +45,54 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
       console.error(error);
     }
   };
-  
 
-  const handleCommntsSubmit = (event) => {
-    // event.preventDefault();
-    console.log(event.id);
-    axios.post(`http://13.209.48.48:8080/comments`,{
-      text: "댓글댓글",
-      scheduleId : event.id
-    }, {
-      headers: {
-        'Authorization': 'Bearer ' + token,
-      }
-    })
-    .then(response => {
-      console.log(response);
-      // const newComments = {
-      //   ScheduleId : response.data.ScheduleId,
-      //   text : response.data.text
-      // }
-      // setComments((prevComments) => [...prevComments, ...newComments]);
-      console.log(response);
-    })
-    .catch(error => console.log(error));
-  }
+  const handleCommentsSubmit = () => {
+    axios
+      .post(
+        `http://13.209.48.48:8080/comments`,
+        {
+          text: text,
+          scheduleId: event.id,
+        },
+        {
+          headers: {
+            'Authorization': 'Bearer ' + token,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        const newComment = {
+          ScheduleId: response.data.ScheduleId,
+          text: response.data.text,
+        };
+        setComments((prevComments) => [...prevComments, newComment]);
+        setText('');
+      })
+      .catch((error) => console.log(error));
+  };
 
-  const handleCommnts = (event) => {
-    axios.get(`http://13.209.48.48:8080/comments/schedule/${event.id}`,{
-      headers: {
-        'Authorization': 'Bearer ' + token,
-      }
-    })
-    .then(response => {
-      console.log(response);
-      // const Comments = {
-      //   ScheduleId : response.data.ScheduleId,
-      //   text : response.data.text
-      // }|| [];
-      // setComments((prevComments) => [...prevComments, ...Comments]);
-    })
-    .catch(error => console.log(error));
-  }
+  const handleComments = () => {
+    axios
+      .get(`http://13.209.48.48:8080/comments/schedule/${event.id}`, {
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        setComments(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
 
   useEffect(() => {
-    handleCommnts(event);
-  }, [])
+    handleComments();
+  }, []);
 
   return (
     <>
-      <Modal show={show}
-      onHide={onClose}
-      className="event-detail-modal"
-      >
+      <Modal show={show} onHide={onClose} className="event-detail-modal">
         <Modal.Header>
           <Modal.Title>{event.title}</Modal.Title>
         </Modal.Header>
@@ -110,11 +101,10 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
           {event.content && <p>{event.content}</p>}
           <p>{event.start.toLocaleString()}</p>
           <input type="file" onChange={(e) => handleImageUpdate(event, e.target.files[0])} />
-          
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={()=>{onClose(); showEditEvent(); }}>
+          <Button variant="secondary" onClick={() => { onClose(); showEditEvent(); }}>
             수정
           </Button>
           <Button variant="danger" onClick={handleDeleteClick}>
@@ -125,61 +115,27 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
           </Button>
           <div className="comments-section">
             <h3>댓글</h3>
-            <div className="comment">
-              <span className="author">John Doe</span>
-              <p className="content">첫 번째 댓글입니다.</p>
-              <span className="comment-date">2023-06-09 14:30</span>
-            </div>
-            <div className="comment">
-              <span className="author">Jane Smith</span>
-              <p className="content">두 번째 댓글입니다.</p>
-              <span className="comment-date">2023-06-09 15:15</span>
-            </div>
+            {comments.map((comment) => (
+              <div key={comment.id} className="comment">
+                <span className="author">{comment.memberNickname}</span>
+                <p className="content">{comment.text}</p>
+                {/* <span className="comment-date">{comment.date}</span> */}
+              </div>
+            ))}
             <div className="comment-divider"></div>
             <form className="comment-form">
-              <textarea placeholder="댓글을 입력하세요"></textarea>
-              <button type="button" onClick={()=>handleCommntsSubmit(event)}>댓글 작성</button>
+              <textarea
+                placeholder="댓글을 입력하세요"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+              ></textarea>
+              <button type="button" onClick={handleCommentsSubmit}>
+                댓글 작성
+              </button>
             </form>
-            {/* {groups.map((group) => (
-                  <li style={{ fontSize: '14px' }} key={group.name}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={selectedGroup.some((selected) => selected.id === group.id)}
-                        onChange={(event) => handleGroupCheckboxChange(event, group)}
-                      />
-                      {group.name}
-                    </label>
-
-                    <KakaoShare isButtonDisabled={buttonDisabled}  onShare={{handleShare}}/>
-             
-
-                    {showEditGroup && (
-                      <>
-                        <button className="delete-button" onClick={() => checkDeleteGroupSubmit(group)}>
-                          삭제
-                        </button>
-                      </>
-                    )}
-                  </li>
-                ))} */}
-            
-              {/* {comments.map((comment) => (
-                <div className="comment" key={comment}>
-                  <p className="content">{comment.text}</p>
-                </div>
-              ))}
-               */}
-            
-              
-
-          
           </div>
         </Modal.Footer>
-          
       </Modal>
-
-      
     </>
   );
 };
