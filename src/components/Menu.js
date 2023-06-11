@@ -314,10 +314,10 @@ useEffect(() => {
                       {group.name}
                     </label>
 
-                    <KakaoShare
+                    {/* <KakaoShare
                     isButtonDisabled={buttonDisabled} 
                     onShare={handleShare}
-                    propss={sharedCode}/>
+                    propss={sharedCode}/> */}
              
 
                     {showEditGroup && (
@@ -375,10 +375,10 @@ useEffect(() => {
 
 
         <li>
-          <div className='modal-container'>
+          <div className='modal-invite'>
         <button className='modal-button' onClick={openModal}>초대코드 입력</button>
         <Modal className="share-modal" isOpen={showModal} onRequestClose={closeModal}>
-          <div className="modal">
+          <div className="modal-inin">
             <div className="modal-content">
               <h2>초대코드 입력</h2>
               <input type="text" value={sharedCode} onChange={(e) => setSharedCode(e.target.value)} />

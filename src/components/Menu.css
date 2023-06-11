@@ -1,4 +1,4 @@
-.modal-container .modal-button{
+.modal-invite .modal-button{
     padding: 10px;
     margin: 23px;
     border-radius: 4px;
@@ -12,7 +12,7 @@
 }
 
 
-.modal-container .share-modal {
+.modal-invite .share-modal {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -26,18 +26,18 @@
     z-index: 9999;
   }
   
-  .modal .modal-content {
+  .modal-inin .modal-content {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
   
-  .modal h2 {
+  .modal-inin h2 {
     margin-bottom: 20px;
     font-size: 24px;
   }
   
-  .modal input {
+  .modal-inin input {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -46,13 +46,13 @@
     font-size: 16px;
   }
   
-  .modal .error-message {
+  .modal-inin .error-message {
     color: red;
     margin-bottom: 10px;
     font-size: 20px;
   }
   
-  .modal button {
+  .modal-inin button {
     padding: 10px 20px;
     margin: 10px;
     border-radius: 4px;
@@ -63,11 +63,11 @@
     font-size: 16px;
   }
   
-  .modal button:hover {
+  .modal-inin button:hover {
     background-color: #45a049;
   }
   
-  .modal .cancel-button{
+  .modal-inin .cancel-button{
     padding: 10px 20px;
     margin: 10px;
     border-radius: 4px;
@@ -78,6 +78,6 @@
     font-size: 16px;
   }
 
-  .modal .cancel-button:hover {
+  .modal-inin .cancel-button:hover {
     background-color: #a14949;
   }
