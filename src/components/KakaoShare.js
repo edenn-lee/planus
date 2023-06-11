@@ -9,29 +9,28 @@ const { Kakao } = window;
 
 
 	// 배포한 자신의 사이트
-    const realUrl = "http://223.222.183.111:3000/"
-    // 로컬 주소 (localhost 3000 같은거)
-    const resultUrl = window.location.href;
-    
-    // 재랜더링시에 실행되게 해준다.
-    useEffect(()=>{
-    	// init 해주기 전에 clean up 을 해준다.
-        Kakao.cleanup();
-        // 자신의 js 키를 넣어준다.
-        if(!Kakao.isInitialized()){
-        Kakao.init('39a64d718f961c83556cf74da18b6dd4');
-        };
-        // 잘 적용되면 true 를 뱉는다.
-        console.log(Kakao.isInitialized());
-    },[]);
-
-    const shareKakao = () =>{
-      if (onShare && typeof onShare === "function") {
-        onShare();
-      }
-
-Kakao.Share.createDefaultButton({
+  const realUrl = "http://223.222.183.111:3000/"
+  // 로컬 주소 (localhost 3000 같은거)
+  const resultUrl = window.location.href;
   
+  // 재랜더링시에 실행되게 해준다.
+  useEffect(()=>{
+    // init 해주기 전에 clean up 을 해준다.
+    Kakao.cleanup();
+    // 자신의 js 키를 넣어준다.
+    if(!Kakao.isInitialized()){
+    Kakao.init('39a64d718f961c83556cf74da18b6dd4');
+    };
+    // 잘 적용되면 true 를 뱉는다.
+    console.log(Kakao.isInitialized());
+  },[]);
+
+  const shareKakao = () =>{
+    if (onShare && typeof onShare === "function") {
+      onShare();
+    }
+
+  Kakao.Share.createDefaultButton({
     container: '#kakaotalk-sharing-btn',
     objectType: 'feed',
     content: {
@@ -55,7 +54,7 @@ Kakao.Share.createDefaultButton({
     ]
   });
 }
-      
+
   return(
       <>
           <button 
@@ -63,7 +62,6 @@ Kakao.Share.createDefaultButton({
               className='share-button'
               onClick={shareKakao}
               disabled={isButtonDisabled}>
-              
           공유 </button>
       </>
   )

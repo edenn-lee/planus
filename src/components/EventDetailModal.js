@@ -50,15 +50,15 @@ const EventDetailModal = ({ showEditEvent, show, event, onClose, onDeleteClick, 
       )
       .then((response) => {
         console.log(response);
-        const newComment = {
-          ScheduleId: response.data.ScheduleId,
-          text: response.data.text,
-        };
-        setComments((prevComments) => [...prevComments, newComment]);
+        handleComments();
         setText('');
       })
       .catch((error) => console.log(error));
   };
+
+  useEffect(()=>{
+    console.log(comments);
+  },[comments])
 
   const handleComments = () => {
     axios
@@ -87,6 +87,7 @@ const EventDetailModal = ({ showEditEvent, show, event, onClose, onDeleteClick, 
         <Modal.Body>
           {images && <img src={`data:image/jpeg;base64,${images}`} alt="이미지가업다" />}
           {event.content && <p>{event.content}</p>}
+          
           <p>{event.start.toLocaleString()}</p>
           <input type="file" onChange={(e) => handleImageUpdate(event, e.target.files[0])} />
         </Modal.Body>

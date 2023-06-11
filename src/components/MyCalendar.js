@@ -1,12 +1,12 @@
 import  {React, useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import axios from 'axios';
+
 import AddEventModal from './AddEventModal';
 import EventDetailModal from './EventDetailModal.js';
-import axios from 'axios';
-import NotificationButton from './NotificationButton';
-import Notification from './Notification';
 import EditEventModal from './EditEventModal';
+import Alarm from './Alarm';
 
 
 function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccepted, handleIsAccepted}) {
@@ -20,7 +20,6 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
   const [showEventDetailModal, setShowEventDetailModal] = useState(false);
   const [personalEvents, setPersonalEvents] = useState([]);
   const [showEditEventModal, setShowEditEventModal] = useState(false);
-  const [editEvent, setEditEvent] = useState('');
   const token = localStorage.getItem('token');
 
   const handleAddEventSubmit = (data) => {
@@ -38,13 +37,15 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
           id: response.data.id.toString(),
           start: new Date(data.startDateTime),
           end: new Date(data.endDateTime),
-          content: data.content
+          content: data.content,
+          alarm:data.alarm,
+          alarm:data.alarmDateTime,
         };
         
         const updatedEvents = [...events, newEvent];
         setEvents(updatedEvents);
         setShowAddEventModal(false);
-        console.log(events);
+        // console.log(events);
       })
       
       .catch(error => {
@@ -53,12 +54,14 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
     }
     else if(data.groupId){
       console.log("그룹공유");
-      console.log(data.groupId);
+      // console.log(data.groupId);
         axios.post(`http://13.209.48.48:8080/api/groups/${data.groupId}/schedules`, {
 
           title: data.title,
           startDateTime: data.startDateTime,
-          endDateTime: data.endDateTime
+          endDateTime: data.endDateTime,
+          alarm:data.alarm,
+          alarm:data.alarmDateTime,
         }, {
           headers: {
             'Authorization': 'Bearer ' + token,
@@ -66,7 +69,7 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
         })
         .then(response => {
           handleSelectedGroupEvents()
-          console.log(events);
+          // console.log(events);
         })
         .catch(error => {
           console.error(error);
@@ -81,20 +84,22 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
         }
       })
       .then(response => {
-        console.log(data.shared);
+        // console.log(data.shared);
         const newEvent = {
           ...data,
           id: response.data.id.toString(),
           start: new Date(data.startDateTime),
           end: new Date(data.endDateTime),
-          content: data.content
+          content: data.content,
+          alarm:data.alarm,
+          alarm:data.alarmDateTime,
         };
         const updatedEvents = [...events, newEvent];
         setEvents(updatedEvents);
         
         setShowAddEventModal(false);
 
-        console.log(events)
+        // console.log(events)
         
       })
       .catch(error => {
@@ -111,16 +116,15 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
       }
     })
     .then(response => {
-      // console.log(response);
       getEvents = response.data.map(event => ({
         ...event,
         id: event.id.toString(),
-        // start: event.startDateTime,
         start: new Date(event.startDateTime[0], event.startDateTime[1] - 1, event.startDateTime[2], event.startDateTime[3], event.startDateTime[4]),
-        // end: event.endDateTime,
         end: new Date(event.endDateTime[0], event.endDateTime[1] - 1, event.endDateTime[2], event.endDateTime[3], event.endDateTime[4]),
         title: event.title,
         content: event.content,
+        alarm:event.alarm,
+        alarm:event.alarmDateTime,
       }));
       console.log(response.data)
       setEvents(getEvents);
@@ -131,7 +135,6 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
   }
 
   const setGroupEvents = () => {
-    // setEvents(personalEvents);
     for (const group of selectedGroup) {
       axios.get(`http://13.209.48.48:8080/api/groups/${group.id}/schedules`,{
             headers: {
@@ -147,17 +150,18 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
             end: new Date(event.endDateTime[0], event.endDateTime[1] - 1, event.endDateTime[2], event.endDateTime[3], event.endDateTime[4]),
             title: event.title,
             content: event.content,
-            groupId:event.groupId
+            groupId:event.groupId,
+            alarm:event.alarm,
+            alarm:event.alarmDateTime,
           }));
             setEvents((prevEvents) => [...prevEvents, ...Events]);
-            console.log(response.data);
+            // console.log(response.data);
           })
           .catch(error => console.log(error));
     }
   }
 
   const handleSelectedGroupEvents = async () => {
-    console.log(selectedGroup.length>0 & Personal === true);
     if(selectedGroup.length>0 & Personal === true){
       console.log("그룹&개인")
       setEvents(personalEvents);
@@ -199,13 +203,6 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
     console.log("공유후 일정 업데이트")
   }, [isAccepted]);
 
-  // useEffect(() => {
-  //   console.log("Personal Change")
-  //   handleSelectedGroupEvents();
-  // }, [Personal]);
-
-
-
   const handleEventClick = (clickInfo) => {
     const eventId = clickInfo.event.id;
     const event = events.find(event => event.id === eventId);
@@ -236,13 +233,15 @@ const handleEditClick = (event) => {
         id: response.data.id.toString(),
         start: new Date(event.startDateTime),
         end: new Date(event.endDateTime),
-        content: event.event
+        content: event.event,
+        alarm:event.alarm,
+        alarm:event.alarmDateTime,
       };
       const updatedEvents = [...events, newEvent];
       setEvents(updatedEvents);
       setShowAddEventModal(false);
       handleSelectedGroupEvents();
-      console.log(events);
+      // console.log(events);
     })
     
     .catch(error => {
@@ -252,12 +251,14 @@ const handleEditClick = (event) => {
   }
   else if(event.groupId){
     console.log("그룹공유수정");
-    console.log(event.groupId);
+    // console.log(event.groupId);
       axios.patch(`http://13.209.48.48:8080/api/groups/${event.groupId}/schedules/${event.id}`, {
         // content:event.content,
         title: event.title,
         startDateTime: event.startDateTime,
-        endDateTime: event.endDateTime
+        endDateTime: event.endDateTime,
+        alarm:event.alarm,
+        alarm:event.alarmDateTime,
       }, {
         headers: {
           'Authorization': 'Bearer ' + token,
@@ -269,11 +270,13 @@ const handleEditClick = (event) => {
           id: response.data.id.toString(),
           start: new Date(event.startDateTime),
           end: new Date(event.endDateTime),
-          content: event.content
+          content: event.content,
+          alarm:event.alarm,
+          alarm:event.alarmDateTime,
         };
         const updatedEvents = [...events, newEvent];
         setEvents(updatedEvents);
-        console.log(events);
+        // console.log(events);
       })
       .catch(error => {
         console.error(error);
@@ -293,11 +296,13 @@ const handleEditClick = (event) => {
         id: response.data.id.toString(),
         start: new Date(event.startDateTime),
         end: new Date(event.endDateTime),
-        content: event.content
+        content: event.content,
+        alarm:event.alarm,
+        alarm:event.alarmDateTime,
       };
       const updatedEvents = [...events, newEvent];
       setEvents(updatedEvents);
-      console.log(events)
+      // console.log(events)
       
     })
     .catch(error => {
@@ -342,7 +347,7 @@ const handleDeleteClick = (event) => {
       // saveEventsToLocalStorage(newEvents); // 로컬 스토리지에 저장
       setSelectedEvent(null);
       setShowEventDetailModal(false);
-      console.log("test");
+      // console.log("test");
     })
     .catch(error => {
       console.error(error);
@@ -376,6 +381,7 @@ const handleDeleteClick = (event) => {
     
   return (
     <>
+    
       <FullCalendar
         plugins={[dayGridPlugin]}
         {...calendarOptions}
@@ -416,6 +422,11 @@ const handleDeleteClick = (event) => {
               eventsUpdate={()=>{handleSelectedGroupEvents();}}
             />
           )}
+          {/* <Alarm
+        event={events}
+        onClose={() => setShowAlarm(false)}
+        onUpdateEvent={handleUpdateEvent} // onUpdateEvent 함수 추가
+      /> */}
     </>
   );
 }

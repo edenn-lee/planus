@@ -1,8 +1,10 @@
+// AddEventModal.js
+
 import React, { useState } from "react";
 import Modal from "react-modal";
 import "./AddEventModal.css";
 
-function AddEventModal({ onAddEventSubmit, onClose, isOpen, groups}) {
+function AddEventModal({ onAddEventSubmit, onClose, isOpen, groups }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [startDateTime, setStartDateTime] = useState("");
@@ -10,7 +12,8 @@ function AddEventModal({ onAddEventSubmit, onClose, isOpen, groups}) {
   const [shared, setShared] = useState("");
   const [allDay, setAllDay] = useState(false);
   const [groupId, setGroupId] = useState(null);
-
+  const [alarm, setAlarm] = useState(false);
+  const [alarmDateTime, setalarmDateTime] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,7 +30,9 @@ function AddEventModal({ onAddEventSubmit, onClose, isOpen, groups}) {
       endDateTime,
       allDay,
       shared,
-      groupId, // 선택된 그룹의 id 값을 전달
+      groupId,
+      alarm,
+      alarmDateTime,
     });
 
     setTitle("");
@@ -36,13 +41,19 @@ function AddEventModal({ onAddEventSubmit, onClose, isOpen, groups}) {
     setEndDateTime("");
     setShared("");
     setAllDay(false);
-
+    setAlarm(false);
+    setalarmDateTime("");
     onClose();
   };
 
-  return (
+  const handleAlarmChange = (e) => {
+    setAlarm(e.target.checked);
+    if (!e.target.checked) {
+      setalarmDateTime("");
+    }
+  };
 
-    
+  return (
     <Modal className={"add-modal"} isOpen={isOpen} onRequestClose={onClose}>
       <form className="add-events-modal" onSubmit={handleSubmit}>
         <label htmlFor="title">일정 제목 : </label>
@@ -95,20 +106,43 @@ function AddEventModal({ onAddEventSubmit, onClose, isOpen, groups}) {
           하루 종일
         </label>
 
-          <div>
-            <label htmlFor="group">그룹 선택: </label>
-            <select
-              id="group"
-              value={groupId}
-              onChange={(e) => setGroupId(e.target.value)}
-            >
-              <option value="">그룹</option>
-              {groups.map(group => (
-              <option key={group.id} value={group.id}>{group.name}</option>
+        <label htmlFor="alarm">
+          <input
+            type="checkbox"
+            id="alarm"
+            checked={alarm}
+            onChange={handleAlarmChange}
+          />
+          알람 설정 여부
+        </label>
+
+        {alarm && (
+          <>
+            <label htmlFor="alarmDateTime">알람 시간 : </label>
+            <input
+              type="datetime-local"
+              id="alarmDateTime"
+              value={alarmDateTime}
+              onChange={(e) => setalarmDateTime(e.target.value)}
+            />
+          </>
+        )}
+
+        <div>
+          <label htmlFor="group">그룹 선택: </label>
+          <select
+            id="group"
+            value={groupId}
+            onChange={(e) => setGroupId(e.target.value)}
+          >
+            <option value="">그룹</option>
+            {groups.map((group) => (
+              <option key={group.id} value={group.id}>
+                {group.name}
+              </option>
             ))}
-            </select>
-          </div>
-        
+          </select>
+        </div>
 
         <button type="submit">추가</button>
         <button type="button" onClick={onClose}>
