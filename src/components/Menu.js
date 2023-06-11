@@ -7,7 +7,7 @@ import './Menu.css';
 import NotificationList from './NotificationList';
 // import Group from './Group';
 
-function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Personal,events,setEvents}) {
+function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, groups, setGroups, Personal,events,setEvents}) {
   const token = localStorage.getItem('token');
   const API_GROUP = 'http://13.209.48.48:8080/api/groups';
   const API_SCHEDULE = 'http://13.209.48.48:8080/api/schedules';
@@ -18,7 +18,7 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showAddButton, setShowAddButton] = useState(true);
   const [groupName, setGroupName] = useState('');
-  const [groups, setGroups] = useState([]);
+  // const [groups, setGroups] = useState([]);
   const [memberIds, setMemberIds] = useState([]);
   // const [selectedGroup, setSelectedGroup] = useState([]);
   const [deleteGroup, setDeleteGroup] = useState('');
@@ -40,10 +40,16 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
   };
 
 
-  const [buttonDisabled, setButtonDisabled] = useState(false);
-  const handleShare = () => {
-    setButtonDisabled(true);
-  }
+//   const [buttonDisabled, setButtonDisabled] = useState(false);
+//   const handleShare = () => {
+//     setButtonDisabled(true);
+//     console.log('buttonDisabled');
+//     console.log(buttonDisabled);
+//   }
+// useEffect(()=>{
+//   console.log(buttonDisabled);
+// },[buttonDisabled]);
+
   // useEffect(() => {
   //   if (selectedGroup) {
   //     // 선택한 그룹의 일정을 가져오는 함수
@@ -178,7 +184,6 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
         .then((response) => {
           // console.log(localStorage.getItem('userNickname'))
           setGroups(response.data);
-          Groups(response.data);
           console.log(response.data);
         })
         .catch((error) => {
@@ -368,7 +373,7 @@ useEffect(()=>{
           </NavLink>
         </li>
 
-        <li><KakaoShare isButtonDisabled={buttonDisabled}  onShare={{handleShare}} propss = {sharedCode}/>
+        <li><KakaoShare groups={groups} sharedCode={sharedCode} setSharedCode={setSharedCode}/>
 
         
         </li>
@@ -376,19 +381,21 @@ useEffect(()=>{
 
         <li>
           <div className='modal-invite'>
-        <button className='modal-button' onClick={openModal}>초대코드 입력</button>
-        <Modal className="share-modal" isOpen={showModal} onRequestClose={closeModal}>
-          <div className="modal-inin">
-            <div className="modal-content">
-              <h2>초대코드 입력</h2>
-              <input type="text" value={sharedCode} onChange={(e) => setSharedCode(e.target.value)} />
-              {errorMessage && <p className="error-message">{errorMessage}</p>}
-              <button onClick={handleInviteGroup}>코드 입력</button>
-              <button className='cancel-button' onClick={closeModal}>닫기</button>
+            <button className='modal-button' onClick={openModal}>초대코드 입력</button>
+          
+
+            <Modal className="share-modal" isOpen={showModal} onRequestClose={closeModal}>
+              <div className="modal-inin">
+                <div className="modal-content">
+                  <h2>초대코드 입력</h2>
+                  <input type="text" value={sharedCode} onChange={(e) => setSharedCode(e.target.value)} />
+                  {errorMessage && <p className="error-message">{errorMessage}</p>}
+                  <button onClick={handleInviteGroup}>코드 입력</button>
+                  <button className='cancel-button' onClick={closeModal}>닫기</button>
+                </div>
+              </div>
+            </Modal>
             </div>
-          </div>
-        </Modal>
-        </div>
       </li>
       </ul>
     </div>

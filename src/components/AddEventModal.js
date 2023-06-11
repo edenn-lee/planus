@@ -13,7 +13,7 @@ function AddEventModal({ onAddEventSubmit, onClose, isOpen, groups }) {
   const [allDay, setAllDay] = useState(false);
   const [groupId, setGroupId] = useState(null);
   const [alarm, setAlarm] = useState(false);
-  const [alarmDateTime, setalarmDateTime] = useState("");
+  const [alarmDateTime, setAlarmDateTime] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -42,14 +42,14 @@ function AddEventModal({ onAddEventSubmit, onClose, isOpen, groups }) {
     setShared("");
     setAllDay(false);
     setAlarm(false);
-    setalarmDateTime("");
+    setAlarmDateTime("");
     onClose();
   };
 
   const handleAlarmChange = (e) => {
     setAlarm(e.target.checked);
     if (!e.target.checked) {
-      setalarmDateTime("");
+      setAlarmDateTime("");
     }
   };
 
@@ -123,7 +123,7 @@ function AddEventModal({ onAddEventSubmit, onClose, isOpen, groups }) {
               type="datetime-local"
               id="alarmDateTime"
               value={alarmDateTime}
-              onChange={(e) => setalarmDateTime(e.target.value)}
+              onChange={(e) => setAlarmDateTime(e.target.value)}
             />
           </>
         )}

@@ -56,7 +56,6 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
       console.log("그룹공유");
       // console.log(data.groupId);
         axios.post(`http://13.209.48.48:8080/api/groups/${data.groupId}/schedules`, {
-
           title: data.title,
           startDateTime: data.startDateTime,
           endDateTime: data.endDateTime,
@@ -197,7 +196,7 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
   }, [selectedGroup,Personal]);
 
   useEffect(() => {
-    eventsUpdate();
+    // eventsUpdate();
     // handleSelectedGroupEvents();
     handleIsAccepted(false);
     console.log("공유후 일정 업데이트")
