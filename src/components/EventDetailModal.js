@@ -44,7 +44,7 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
         console.log(response);
     const updatedEvent = response.data;
     const imageResponse = response.data;
-    const arrayBuffer = Uint8Array.from(atob(imageResponse.data), c => c.charCodeAt(0)).buffer;
+    const arrayBuffer = new Uint8Array.from(atob(imageResponse.data), c => c.charCodeAt(0)).buffer;
     const byteArray = new Uint8Array(arrayBuffer);
     const blob = new Blob([byteArray], { type: imageResponse.headers['Content-Type'] });
     const base64Image = await convertBlobToBase64(blob);
