@@ -103,7 +103,7 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
   };
 
   useEffect(() => {
-    handleCommnts(event);
+    handleComments(event);
   }, [])
 
 
@@ -150,7 +150,7 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
             <div className="comment-divider"></div>
             <form className="comment-form">
               <textarea placeholder="댓글을 입력하세요"></textarea>
-              <button type="button" onClick={()=>handleCommntsSubmit(event)}>댓글 작성</button>
+              <button type="button" onClick={()=>handleCommentsSubmit(event)}>댓글 작성</button>
             </form>
             {/* {groups.map((group) => (
                   <li style={{ fontSize: '14px' }} key={group.name}>
