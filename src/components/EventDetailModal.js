@@ -62,45 +62,45 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
   }
 };
 
-  const handleCommntsSubmit = (event) => {
-    // event.preventDefault();
-    console.log(event.id);
-    axios.post(`http://13.209.48.48:8080/comments`,{
-      text: "댓글댓글",
-      scheduleId : event.id
-    }, {
-      headers: {
-        'Authorization': 'Bearer ' + token,
-      }
-    })
-    .then(response => {
-      console.log(response);
-      // const newComments = {
-      //   ScheduleId : response.data.ScheduleId,
-      //   text : response.data.text
-      // }
-      // setComments((prevComments) => [...prevComments, ...newComments]);
-      console.log(response);
-    })
-    .catch(error => console.log(error));
-  }
+  const handleCommentsSubmit = () => {
+    axios
+      .post(
+        `http://13.209.48.48:8080/comments`,
+        {
+          text: text,
+          scheduleId: event.id,
+        },
+        {
+          headers: {
+            'Authorization': 'Bearer ' + token,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        handleComments();
+        setText('');
+      })
+      .catch((error) => console.log(error));
+  };
 
-  const handleCommnts = (event) => {
-    axios.get(`http://13.209.48.48:8080/comments/schedule/${event.id}`,{
-      headers: {
-        'Authorization': 'Bearer ' + token,
-      }
-    })
-    .then(response => {
-      console.log(response);
-      // const Comments = {
-      //   ScheduleId : response.data.ScheduleId,
-      //   text : response.data.text
-      // }|| [];
-      // setComments((prevComments) => [...prevComments, ...Comments]);
-    })
-    .catch(error => console.log(error));
-  }
+  useEffect(()=>{
+    console.log(comments);
+  },[comments])
+
+  const handleComments = () => {
+    axios
+      .get(`http://13.209.48.48:8080/comments/schedule/${event.id}`, {
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        setComments(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
 
   useEffect(() => {
     handleCommnts(event);
@@ -119,6 +119,7 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
         <Modal.Body>
           {images && <img src={`data:image/jpeg;base64,${images}`} alt="No Images" />}
           {event.content && <p>{event.content}</p>}
+          
           <p>{event.start.toLocaleString()}</p>
           <input type="file" onChange={(e) => handleImageUpdate(event, e.target.files[0])} />
           
