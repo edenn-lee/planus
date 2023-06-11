@@ -28,11 +28,11 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
     });
   };
   const handleImageUpdate = async (event, imageFile) => {
-
+  try {
     const formData = new FormData();
     formData.append('image', imageFile);
 
-    await axios.patch(
+    const response = await axios.patch(
       `http://13.209.48.48:8080/api/schedules/image/${event.id}`,
       formData,
       {
@@ -41,10 +41,7 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
           'Content-Type': 'multipart/form-data',
         },
       }
-    )
-    .then(response => {
-
-    
+    );
         console.log(response);
     const updatedEvent = response.data;
 
@@ -54,18 +51,19 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
     const byteArray = new Uint8Array(buffer);
     const blob = new Blob([byteArray], { type: ContentType });
 
-    const base64Image = convertBlobToBase64(blob);
+    const base64Image = await convertBlobToBase64(blob);
     setImages(base64Image);
 
    console.log(updatedEvent.images);
    console.log(buffer);
     console.log(blob);
-    console.log(buffer.ContentType);
+    console.log(byteArray);
+    console.log(updatedEvent.ContentType);
     console.log(base64Image);
-})
-   .catch (error=> {
+
+  } catch (error) {
     console.error(error);
-  });
+  }
 };
 
   const handleCommentsSubmit = () => {
