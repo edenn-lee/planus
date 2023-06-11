@@ -32,8 +32,7 @@ function LoginPage(props) {
         },
       }, );
       console.log(response);
-      localStorage.setItem('userId',response.data.id);
-      console.log(localStorage.getItem('userId'))
+      localStorage.setItem('userNickname',response.data.nickname);
     } catch (error) {
       console.error(error);
     }

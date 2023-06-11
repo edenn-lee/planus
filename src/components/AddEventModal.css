@@ -22,7 +22,7 @@
 
   .add-events-modal input{
     margin-bottom: 15px;
-    margin-right: 15px;
+    margin-right: 10px;
   }
   
   .add-events-modal input[type="text"],
@@ -35,12 +35,19 @@
   }
 
   .add-events-modal input[type="datetime-local"] {
-    width: 100%;
+    width: 50%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
   }
-  
+
+  .add-events-modal input[type="checkbox"] {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 0;
+    margin-right: 5px;
+  }
+
   .add-events-modal label[for="all-day"] {
     display: flex;
     align-items: center;

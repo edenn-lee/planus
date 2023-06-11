@@ -15,12 +15,9 @@ function EditEventModal({ hide,event, onClose, show, groups ,handleEditSubmit,ev
   useEffect(()=>{
     console.log("EditEventModal");
     console.log(groups)
-},[])
+  },[])
   
-
   const handleSubmit = (e) => {
-    // e.preventDefault();
-
     if (!title.trim()) {
       alert("일정 내용을 입력해주세요.");
       return;
@@ -38,9 +35,10 @@ function EditEventModal({ hide,event, onClose, show, groups ,handleEditSubmit,ev
     };
 
     handleEditSubmit(updatedEvent);
-    
     onClose();
   };
+
+  
 
   return (
     <Modal className="edit-modal" isOpen={show} onRequestClose={onClose}>

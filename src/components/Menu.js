@@ -99,7 +99,7 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
         },
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         setGroupName('');
         setShowAddGroup(false);
         setMemberIds('');
@@ -116,7 +116,7 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
 
   const setGroupMember=(groupId)=>{
     axios.post(`http://13.209.48.48:8080/api/groups/${groupId}/members`, {
-      id: localStorage.getItem('userId')
+      id: localStorage.getItem('userNickname')
     }, {
       headers: {
         'Authorization': 'Bearer ' + token
@@ -134,7 +134,7 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
 
   const handleDeleteGroupSubmit = (deleteGroup) => {
     console.log(deleteGroup);
-    if (deleteGroup.ownerId == localStorage.getItem('userId') && deleteGroup.memberIds.length == 1 && deleteGroup.memberIds[0] == localStorage.getItem('userId')) {
+    if (deleteGroup.ownerId == localStorage.getItem('userNickname') && deleteGroup.memberIds.length == 1 && deleteGroup.memberIds[0] == localStorage.getItem('userNickname')) {
       console.log("일치")
       axios.delete(`http://13.209.48.48:8080/api/groups/owner/${deleteGroup.id}`, {
         headers: {
@@ -176,7 +176,7 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, Groups, Per
           },
         })
         .then((response) => {
-          // console.log(localStorage.getItem('userId'))
+          // console.log(localStorage.getItem('userNickname'))
           setGroups(response.data);
           Groups(response.data);
           console.log(response.data);
@@ -209,7 +209,7 @@ useEffect(()=>{
   };
 
   useEffect(()=>{
-    console.log(selectedGroup);
+    // console.log(selectedGroup);
   },[selectedGroup])
 
   const handlePersonalScheduleCheckboxChange = (event) => {
@@ -220,7 +220,7 @@ useEffect(()=>{
 
 
   useEffect(()=>{
-    console.log(showPersonalSchedule);
+    // console.log(showPersonalSchedule);
   },[showPersonalSchedule])
 
 
@@ -251,10 +251,10 @@ useEffect(()=>{
       });
   };
 
-useEffect(() => {
-  console.log(sharedCode);
-}
-,[sharedCode]) 
+// useEffect(() => {
+//   console.log(sharedCode);
+// }
+// ,[sharedCode]) 
 
 
 

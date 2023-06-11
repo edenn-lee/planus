@@ -108,7 +108,7 @@ function App() {
             events = {events}
             setEvents={handleSetEvents}/>
 
-          {isAuthenticated ? <p style={{fontSize:'15px'}}>user : {localStorage.getItem('user')}</p> : null}
+          {isAuthenticated ? <p style={{fontSize:'15px'}}>user : {localStorage.getItem('userNickname')}</p> : null}
           <h1 id="planus-title">Planus</h1>
           <NotificationButton onClick={handleNotificationToggle}/>
           <Notification
