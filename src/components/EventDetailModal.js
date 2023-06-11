@@ -12,7 +12,8 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
   const [text, setText] = useState('');
   const [ScheduleId, setScheduleID] = useState('');
 
-
+  const { Buffer } = require('buffer');
+  
 
   const handleDeleteClick = () => {
     onDeleteClick(event);
@@ -21,17 +22,17 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(blob);
-      reader.onload = (event) => resolve(event.target.result);
+      reader.onload = () => resolve(reader.result);
       reader.onerror = (error) => reject(error);
       
     });
   };
   const handleImageUpdate = async (event, imageFile) => {
-  try {
+
     const formData = new FormData();
     formData.append('image', imageFile);
 
-    const response = await axios.patch(
+    await axios.patch(
       `http://13.209.48.48:8080/api/schedules/image/${event.id}`,
       formData,
       {
@@ -40,26 +41,31 @@ const EventDetailModal = ({showEditEvent, show, event, onClose, onDeleteClick, e
           'Content-Type': 'multipart/form-data',
         },
       }
-    );
+    )
+    .then(response => {
+
+    
         console.log(response);
     const updatedEvent = response.data;
-    const imageResponse = response.data;
-    const arrayBuffer = new Uint8Array.from(atob(imageResponse.data), c => c.charCodeAt(0)).buffer;
-    const byteArray = new Uint8Array(arrayBuffer);
-    const blob = new Blob([byteArray], { type: imageResponse.headers['Content-Type'] });
-    const base64Image = await convertBlobToBase64(blob);
+
+    const ContentType = "image/jpeg";
+
+    const buffer = Buffer.from(updatedEvent.images, 'base64');
+    const byteArray = new Uint8Array(buffer);
+    const blob = new Blob([byteArray], { type: ContentType });
+
+    const base64Image = convertBlobToBase64(blob);
     setImages(base64Image);
 
+   console.log(updatedEvent.images);
+   console.log(buffer);
     console.log(blob);
-    console.log(byteArray);
-    console.log(imageResponse.data);
-    console.log(imageResponse.headers['Content-Type']);
-    console.log(updatedEvent.images);
+    console.log(buffer.ContentType);
     console.log(base64Image);
-    console.log(response.data.images.imageData);
-  } catch (error) {
+})
+   .catch (error=> {
     console.error(error);
-  }
+  });
 };
 
   const handleCommentsSubmit = () => {
