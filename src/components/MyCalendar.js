@@ -54,14 +54,15 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
     }
     else if(data.groupId){
       console.log("그룹공유");
-      // console.log(data.groupId);
+      console.log(data.alarm);
+      console.log(data.alarmDateTime);
         axios.post(`http://13.209.48.48:8080/api/groups/${data.groupId}/schedules`, {
           title: data.title,
           startDateTime: data.startDateTime,
           endDateTime: data.endDateTime,
           content:data.content,
           alarm:data.alarm,
-          alarm:data.alarmDateTime,
+          alarmDateTime:data.alarmDateTime,
         }, {
           headers: {
             'Authorization': 'Bearer ' + token,
@@ -69,7 +70,8 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
         })
         .then(response => {
           handleSelectedGroupEvents()
-          // console.log(events);
+          console.log(response);
+          console.log("ㅇㄴ;ㅣㅏㅓㄻ니;ㅇ럼;ㅣㄴ얼");
         })
         .catch(error => {
           console.error(error);
@@ -183,22 +185,17 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
   };
 
   useEffect(() => {
-    // setEvents([]);
+ 
     eventsUpdate();
   }, []);
 
-  // const handlePatchUpdate = () => {
-  //   eventsUpdate();
-  //   handleSelectedGroupEvents();
-  // }
+ 
 
   useEffect(() => {
     handleSelectedGroupEvents();
   }, [selectedGroup,Personal]);
 
   useEffect(() => {
-    // eventsUpdate();
-    // handleSelectedGroupEvents();
     handleIsAccepted(false);
     console.log("공유후 일정 업데이트")
   }, [isAccepted]);
@@ -234,8 +231,10 @@ const handleEditClick = (event) => {
         start: new Date(event.startDateTime),
         end: new Date(event.endDateTime),
         content: event.event,
+        allDay:event.allDay,
         alarm:event.alarm,
         alarm:event.alarmDateTime,
+        
       };
       const updatedEvents = [...events, newEvent];
       setEvents(updatedEvents);
@@ -254,6 +253,7 @@ const handleEditClick = (event) => {
     // console.log(event.groupId);
       axios.patch(`http://13.209.48.48:8080/api/groups/${event.groupId}/schedules/${event.id}`, {
         // content:event.content,
+        ...event,
         title: event.title,
         startDateTime: event.startDateTime,
         endDateTime: event.endDateTime,
@@ -423,10 +423,6 @@ const handleDeleteClick = (event) => {
               eventsUpdate={()=>{handleSelectedGroupEvents();}}
             />
           )}
-          {/* <Alarm
-            events={events}
-            onUpdateEvent={handleEditClick} // onUpdateEvent 함수 추가
-          /> */}
     </>
   );
 }

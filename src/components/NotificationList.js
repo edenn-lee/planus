@@ -145,7 +145,7 @@ function NotificationList(isOpen,setIsAccepted,isAccepted) {
   return (
     <div>
       <button className='toggle-button' onClick={handleClick}>
-        {showGroupMessages ? '그룹 메시지 숨기기' : '일정 공유 메시지 보기'}
+        {showGroupMessages ? '그룹 메시지' : '일정 공유 메시지'}
       </button>
 
       {messages.map((message) => (

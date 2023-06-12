@@ -42,7 +42,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
-  
+    
     if (token && user) {
       // 토큰 및 사용자 정보가 로컬 스토리지에 저장되어 있는 경우
       setIsAuthenticated(true);
@@ -53,6 +53,7 @@ function App() {
     localStorage.removeItem('token'); // 로그인 토큰 삭제
     localStorage.removeItem('user'); // 유저 정보 삭제
     localStorage.removeItem('userNickname'); // 유저 닉네임 삭제
+    localStorage.removeItem('userId');
     setIsAuthenticated(false); // 인증 상태 변경
     
   };

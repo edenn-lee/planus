@@ -7,7 +7,7 @@ import './Menu.css';
 import NotificationList from './NotificationList';
 // import Group from './Group';
 
-function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, groups, setGroups, Personal,events,setEvents}) {
+function Menu({userId, isOpen, onClose, selectedGroup, handleSelectedGroup, groups, setGroups, Personal,events,setEvents}) {
   const token = localStorage.getItem('token');
   const API_GROUP = 'http://13.209.48.48:8080/api/groups';
   const API_SCHEDULE = 'http://13.209.48.48:8080/api/schedules';
@@ -139,8 +139,10 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, groups, set
 
 
   const handleDeleteGroupSubmit = (deleteGroup) => {
-    console.log(deleteGroup);
-    if (deleteGroup.ownerId == localStorage.getItem('userNickname') && deleteGroup.memberIds.length == 1 && deleteGroup.memberIds[0] == localStorage.getItem('userNickname')) {
+    console.log(deleteGroup.ownerId);
+    console.log(localStorage.getItem('userId'));
+    
+    if (deleteGroup.ownerId == localStorage.getItem('userId') && deleteGroup.memberIds.length == 1 && deleteGroup.memberIds[0] == localStorage.getItem('userId')) {
       console.log("일치")
       axios.delete(`http://13.209.48.48:8080/api/groups/owner/${deleteGroup.id}`, {
         headers: {
@@ -158,7 +160,7 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, groups, set
     }
     else {
       console.log("불일치")
-      axios.delete(`http://13.209.48.48:8080/api/groups/${deleteGroup.id}/members/${deleteGroup.memberIds}`, {
+      axios.delete(`http://13.209.48.48:8080/api/groups/${deleteGroup.id}/members/${localStorage.getItem('userId')}`, {
         headers: {
           'Authorization': 'Bearer ' + token
         },
@@ -182,7 +184,7 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, groups, set
           },
         })
         .then((response) => {
-          // console.log(localStorage.getItem('userNickname'))
+          
           setGroups(response.data);
           console.log(response.data);
         })
@@ -191,11 +193,7 @@ function Menu({ isOpen, onClose, selectedGroup, handleSelectedGroup, groups, set
       });
   };
 
-  // useEffect(() => {
-  //   if(selectedGroup){
-  //     handleSelectedGroupEvents()
-  //   }
-  // }, [selectedGroup]);
+
 
 useEffect(()=>{
   LoadGroups();
@@ -214,7 +212,7 @@ useEffect(()=>{
   };
 
   useEffect(()=>{
-    // console.log(selectedGroup);
+    
   },[selectedGroup])
 
   const handlePersonalScheduleCheckboxChange = (event) => {
@@ -225,7 +223,7 @@ useEffect(()=>{
 
 
   useEffect(()=>{
-    // console.log(showPersonalSchedule);
+    
   },[showPersonalSchedule])
 
 

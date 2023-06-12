@@ -19,13 +19,14 @@ const EventDetailModal = ({ showEditEvent, show, event, onClose, onDeleteClick, 
     try {
       const formData = new FormData();
       formData.append('image', imageFile);
-
+      console.log("이미지 patch");
       const response = await axios.patch(`http://13.209.48.48:8080/api/schedules/image/${event.id}`, formData, {
         headers: {
           'Authorization': 'Bearer ' + token,
           'Content-Type': 'multipart/form-data',
         },
       });
+      
     } catch (error) {
       console.error(error);
     }
