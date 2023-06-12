@@ -34,3 +34,57 @@
  .message-box .reject:hover{
     background-color: rgb(255, 30, 0);
  }
+
+ .toggle-button {
+   background-color: blue;
+   color: white;
+   border: none;
+   padding: 5px 10px;
+   border-radius: 4px;
+   cursor: pointer;
+   font-family: 'KBO-Dia-Gothic_bold';
+ }
+ 
+ .toggle-button.active {
+   background-color: #888;
+ }
+
+ .group-message-box{
+   background-color: rgb(155, 221, 247);
+   margin :6px;
+   margin-bottom: 1rem;
+   border: 3px solid #3e5d77;
+   padding :4px;
+   color: black;
+   border-radius: 7%;
+   font-size: 15px;
+   width: fit-content;
+   
+}
+
+.group-message-box button{
+   background-color: rgb(0, 26, 172);
+   border : none;
+   width:46px;
+   height:25px;
+   margin :3px;
+   font-family: OAGothic-ExtraBold;
+   color: white;
+   font-family: 'KBO-Dia-Gothic_bold';
+}
+
+.group-message-box .accept{
+   background-color: rgb(31, 53, 255);
+}
+
+.group-message-box .reject{
+   background-color: rgb(255, 65, 40);
+}
+
+.group-message-box .accept:hover{
+   background-color: rgb(3, 28, 255);
+}
+
+.group-message-box .reject:hover{
+   background-color: rgb(255, 30, 0);
+}

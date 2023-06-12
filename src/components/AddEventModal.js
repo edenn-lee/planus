@@ -34,7 +34,7 @@ function AddEventModal({ onAddEventSubmit, onClose, isOpen, groups }) {
       alarm,
       alarmDateTime,
     });
-
+console.log(startDateTime);
     setTitle("");
     setContent("");
     setStartDateTime("");

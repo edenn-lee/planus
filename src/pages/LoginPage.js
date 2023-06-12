@@ -33,6 +33,7 @@ function LoginPage(props) {
       }, );
       console.log(response);
       localStorage.setItem('userNickname',response.data.nickname);
+
     } catch (error) {
       console.error(error);
     }

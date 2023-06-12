@@ -1,76 +1,80 @@
 .todo-list {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .todo-list h1 {
-    text-align: center;
-  }
-  
-  .add-todo {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .add-todo input[type="text"] {
-    flex-grow: 1;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-  }
-  
-  .add-todo button {
-    padding: 8px 16px;
-    background-color: #4caf50;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .todos {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .todos li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    background-color: #fff;
-    padding: 10px;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .todos li.completed {
-    text-decoration: line-through;
-    opacity: 0.7;
-  }
-  
-  .todos li input[type="checkbox"] {
-    margin-right: 10px;
-  }
-  
-  .todo-title {
-    flex-grow: 1;
-  }
-  
-  .due-date {
-    margin-right: 10px;
-  }
-  
-  .todos li button {
-    padding: 6px 12px;
-    background-color: #f44336;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #aaeefa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.todo-list h1 {
+  text-align: center;
+}
+
+.add-todo {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.add-todo input[type="text"] {
+  flex-grow: 1;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.add-todo button {
+  padding: 8px 16px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.todos {
+  list-style-type: none;
+  padding: 0;
+}
+
+.todos li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.todos li.completed {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.todos li input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.todo-title {
+  flex-grow: 1;
+}
+
+.due-date {
+  margin-right: 10px;
+}
+
+.todos li button {
+  padding: 6px 12px;
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.date-navigation{
+  margin-bottom: 5px;
+}

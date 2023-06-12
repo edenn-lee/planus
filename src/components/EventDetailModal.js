@@ -1,13 +1,15 @@
-import { Modal, Button, ModalBody } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import './EventDetailModal.css';
 import axios from 'axios';
 
 const EventDetailModal = ({ showEditEvent, show, event, onClose, onDeleteClick, events, setEvents }) => {
   const [images, setImages] = useState(event.images);
-  const token = localStorage.getItem('token');
   const [comments, setComments] = useState([]);
   const [text, setText] = useState('');
+
+  const token = localStorage.getItem('token');
+
 
   const handleDeleteClick = () => {
     onDeleteClick(event);
@@ -24,18 +26,38 @@ const EventDetailModal = ({ showEditEvent, show, event, onClose, onDeleteClick, 
           'Content-Type': 'multipart/form-data',
         },
       });
-
-      const updatedEvent = response.data;
-      setImages(updatedEvent.images);
-      const updatedEvents = events.map((evt) => (evt.id === updatedEvent.id ? updatedEvent : evt));
-      setEvents(updatedEvents);
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleCommentsSubmit = () => {
-    axios
+    if(event.groupId){
+      console.log("rf이벤트");
+      axios
+      .post(
+        `http://13.209.48.48:8080/comments`,
+        {
+          text: text,
+          groupScheduleId: event.id,
+        },
+        {
+          headers: {
+            'Authorization': 'Bearer ' + token,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        handleComments();
+        setText('');
+      })
+      .catch((error) => console.log(error));
+   
+    }
+    else{
+      console.log("이벤트");
+      axios
       .post(
         `http://13.209.48.48:8080/comments`,
         {
@@ -54,13 +76,24 @@ const EventDetailModal = ({ showEditEvent, show, event, onClose, onDeleteClick, 
         setText('');
       })
       .catch((error) => console.log(error));
+    }
   };
 
-  useEffect(()=>{
-    console.log(comments);
-  },[comments])
-
   const handleComments = () => {
+    if(event.groupId){
+      axios
+      .get(`http://13.209.48.48:8080/comments/groupSchedule/${event.id}`, {
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        setComments(response.data);
+      })
+      .catch((error) => console.log(error));
+    }
+    else{
     axios
       .get(`http://13.209.48.48:8080/comments/schedule/${event.id}`, {
         headers: {
@@ -72,11 +105,14 @@ const EventDetailModal = ({ showEditEvent, show, event, onClose, onDeleteClick, 
         setComments(response.data);
       })
       .catch((error) => console.log(error));
+    }
   };
 
   useEffect(() => {
     handleComments();
   }, []);
+
+
 
   return (
     <>
@@ -85,10 +121,21 @@ const EventDetailModal = ({ showEditEvent, show, event, onClose, onDeleteClick, 
           <Modal.Title>{event.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {images && <img src={`data:image/jpeg;base64,${images}`} alt="이미지가업다" />}
+        {images && images.length > 0 ? (
+          images.map((imageData, index) => (
+            <img
+              key={index}
+              className='imageData'
+              src={`data:image/jpeg;base64,${imageData.imageData}`}
+              alt="Decoded Image"
+            />
+          ))
+        ) : (
+          <p></p>
+        )}
           {event.content && <p>{event.content}</p>}
-          
-          <p>{event.start.toLocaleString()}</p>
+          <p>{new Date(event.start).toLocaleString()}</p>
+          <p style={{fontSize:"12px", color:"blue"}}>{event.alarm && '알람 시간 : '+new Date(event.alarmDateTime[0], event.alarmDateTime[1] - 1, event.alarmDateTime[2], event.alarmDateTime[3], event.alarmDateTime[4]).toLocaleString()}</p>
           <input type="file" onChange={(e) => handleImageUpdate(event, e.target.files[0])} />
         </Modal.Body>
 

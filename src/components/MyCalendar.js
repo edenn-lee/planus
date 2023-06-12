@@ -6,7 +6,7 @@ import axios from 'axios';
 import AddEventModal from './AddEventModal';
 import EventDetailModal from './EventDetailModal.js';
 import EditEventModal from './EditEventModal';
-import Alarm from './Alarm';
+// import Alarm from './Alarm';
 
 
 function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccepted, handleIsAccepted}) {
@@ -59,6 +59,7 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
           title: data.title,
           startDateTime: data.startDateTime,
           endDateTime: data.endDateTime,
+          content:data.content,
           alarm:data.alarm,
           alarm:data.alarmDateTime,
         }, {
@@ -212,7 +213,7 @@ function MyCalendar({ selectedGroup ,Groups,Personal, events, setEvents,isAccept
     }
     setSelectedEvent(event);
     setShowEventDetailModal(true);
-
+    // console.log(event.images);
     console.log(event);
   };
   
@@ -308,6 +309,7 @@ const handleEditClick = (event) => {
       console.error(error);
     });
   }
+  console.log('Edit 실행');
 };
 
 const handleEditEvent=()=>{
@@ -422,10 +424,9 @@ const handleDeleteClick = (event) => {
             />
           )}
           {/* <Alarm
-        event={events}
-        onClose={() => setShowAlarm(false)}
-        onUpdateEvent={handleUpdateEvent} // onUpdateEvent 함수 추가
-      /> */}
+            events={events}
+            onUpdateEvent={handleEditClick} // onUpdateEvent 함수 추가
+          /> */}
     </>
   );
 }

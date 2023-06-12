@@ -1,38 +1,47 @@
-import React, { useEffect } from "react";
-import axios from "axios";
+// import React, { useEffect } from "react";
+// import axios from "axios";
 
-function Alarm({ events, onUpdateEvent }) {
-    console.log(events)
-    console.log("aslkdfj;alsdjfl;kas")
-  useEffect(() => {
-    const checkAlarms = () => {
-      const now = new Date();
-      events.forEach((event) => {
-        if (event.alarm && new Date(event.alarmDateTime) < now) {
-          sendAlarm(event);
-        }
-      });
-    };
+// function Alarm({ events, onUpdateEvent }) {
 
-    const sendAlarm = (event) => {
-      // 알람 전송을 위한 axios 요청
-      axios.post("your-api-url", event).then((response) => {
-        // 알람 전송 성공 시 이벤트 업데이트
-        if (response.status === 200) {
-          const updatedEvent = { ...event, alarm: false };
-          onUpdateEvent(updatedEvent);
-        }
-      });
-    };
+//   const token = localStorage.getItem('token');
 
-    const interval = setInterval(checkAlarms, 10000); // 10초마다 알람 체크
+//   useEffect(() => {
+//     if (!events) {
+//       return; // events가 undefined일 경우 실행 중단
+//     }
+//     const checkAlarms = () => {
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, [events, onUpdateEvent]);
+//       const now = new Date();
+//       events.forEach((event) => {
+//         if (event.alarm && new Date(event.alarmDateTime) < now) {
+//           sendAlarm(event);
+//         }
+//       });
+//     };
 
-  return null;
-}
+//     const sendAlarm = (event) => {
+//       // 알람 전송을 위한 axios 요청
+//       axios.post(`http://13.209.48.48:8080/send-one`,event.title, {
+//         headers: {
+//           'Authorization': 'Bearer ' + token,
+//         }
+//       })
+//       .then((response) => {
+//         console.log(response);
+//         // 알람 전송 성공 시 이벤트 업데이트
+//           const updatedEvent = { ...event, alarm: false };
+//           onUpdateEvent(updatedEvent);
+//       });
+//     };
 
-export default Alarm;
+//     const interval = setInterval(checkAlarms, 5000); // 5초마다 알람 체크
+
+//     return () => {
+//       clearInterval(interval);
+//     };
+//   }, [events, onUpdateEvent]);
+
+//   return null;
+// }
+
+// export default Alarm;

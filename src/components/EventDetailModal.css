@@ -4,10 +4,15 @@
   width: 100%;
   height: inherit;
   max-width: 500px;
-  max-height: 700px;
+  /* max-height: ; */
   background-color: #0d1e30;
   padding: 20px;
   border-radius: 5%;
+}
+
+.event-detail-modal .imageData {
+  width: 450px;
+  height: auto;
 }
 
 .event-detail-modal .modal-content {
@@ -40,7 +45,10 @@
 }
 
 .event-detail-modal .modal-body {
-  padding: 20px;
+  padding: 10px;
+  margin-left: 10px;
+  overflow-y: auto;
+  max-height: 600px; /* 원하는 최대 높이로 조정해주세요 */
 }
 
 .event-detail-modal .modal-body .img {
@@ -51,8 +59,9 @@
   margin-bottom: 20px;
 }
 
-.event-detail-modal .modal-body .p {
+.event-detail-modal .modal-body p {
   margin-bottom: 10px;
+  margin-top: 0;
 }
 
 .event-detail-modal .modal-body input[type="file"] {

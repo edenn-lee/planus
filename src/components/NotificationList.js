@@ -5,8 +5,14 @@ import './Notification.css';
 
 function NotificationList(isOpen,setIsAccepted,isAccepted) {
   const [messages, setMessages] = useState([]);
+  const [groupMessages, setGroupMessages] = useState([]);
+  const [showGroupMessages, setShowGroupMessages] = useState(false);
+
   const token = localStorage.getItem('token');
 
+  const handleClick = () => {
+    setShowGroupMessages(!showGroupMessages);
+  };
 
   const getMessages = () => {
     axios.get(`http://13.209.48.48:8080/api/messages/received/`,{
@@ -31,7 +37,29 @@ function NotificationList(isOpen,setIsAccepted,isAccepted) {
       setMessages(filteredMessages);
       // console.log(filteredMessages);
     }).catch(error => console.log(error));
+
+    axios.get(`http://13.209.48.48:8080/group/messages/`,{
+      headers: {
+        'Authorization': 'Bearer ' + token,
+      }
+    })
+    .then(response=>{
+      console.log(response)
+      const groupMessages = response.data.map(message => ({
+         email: message.email,
+         groupId: message.groupId,
+         id : message.id,
+         message: message.message,
+         ownerId: message.ownerId,
+         sharedCode : message.sharedCode
+      }));
+      setGroupMessages(groupMessages);
+    }).catch(error => console.log(error));
   }
+  
+  useEffect(() => {
+    console.log(groupMessages);
+  }, [groupMessages]);
 
   useEffect(() => {
     getMessages()
@@ -44,41 +72,114 @@ function NotificationList(isOpen,setIsAccepted,isAccepted) {
     console.log(message.sharedScheduleId);
     let id = Number(message.sharedScheduleId);
       axios.post(`http://13.209.48.48:8080/api/messages/accept/${message.id}`, Number(message.sharedScheduleId),{
-          headers: {
-            'Authorization': 'Bearer ' + token,
-            'Content-Type' : "application/json"
-          }
-        })
-        .then(response => {
-          console.log(response);
-          const acceptedMessage = messages.find((message) => message.id === id);
-          console.log(`메시지 "${acceptedMessage.content}"가 승인되었습니다.`);
-          getMessages();
-          setIsAccepted(true);
-          console.log(isAccepted);
-          
-        })
-        .catch(error => console.log(error));
-      };
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type' : "application/json"
+        }
+      })
+      .then(response => {
+        console.log(response);
+        const acceptedMessage = messages.find((message) => message.id === id);
+        console.log(`메시지 "${acceptedMessage.content}"가 승인되었습니다.`);
+        getMessages();
+        setIsAccepted(true);
+        console.log(isAccepted);
+      })
+      .catch(error => console.log(error));
+  };
     
-  
+  const handleAcceptGroup = (groupMessage) => {
+    
+    axios.get(`http://13.209.48.48:8080/accept/message/${groupMessage.id}?sharedCode=${groupMessage.sharedCode}&email=${groupMessage.email}`,{
+        headers: {
+          'Authorization': 'Bearer ' + token
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        getMessages();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const handleRejectGroup = (groupMessage) => {
+    
+    axios.delete(`http://13.209.48.48:8080/reject/message/${groupMessage.id}` ,{
+        headers: {
+          'Authorization': 'Bearer ' + token
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        getMessages();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+ 
 
   const handleReject = (message) => {
     let id = Number(message.sharedScheduleId);
-    // 해당 messageId에 대한 메시지를 거절하는 코드
-    const rejectedMessage = messages.find((message) => message.id === id);
-    console.log(`메시지 "${rejectedMessage.content}"가 거절되었습니다.`);
+    axios.post(`http://13.209.48.48:8080/api/messages/reject/${message.id}`, Number(message.sharedScheduleId),{
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type' : "application/json"
+        }
+      })
+      .then(response => {
+        console.log(response);
+        const rejectedMessage = messages.find((message) => message.id === id);
+        console.log(`메시지 "${rejectedMessage.content}"가 거절되었습니다.`);
+        getMessages();
+        setIsAccepted(true);
+      })
+      .catch(error => console.log(error));
   };
+
+
 
   return (
     <div>
+      <button className='toggle-button' onClick={handleClick}>
+        {showGroupMessages ? '그룹 메시지 숨기기' : '일정 공유 메시지 보기'}
+      </button>
+
       {messages.map((message) => (
-        <Message
-            message={message}
-            onAccept={handleAccept}
-            onReject={handleReject}
-        />
+        <div className="message-box" key={message.id}>
+        <h4 style={{ margin: '0' }}>{message.title}</h4>
+        <p style={{ margin: '0' }}>일정 내용: {message.content}</p>
+        <p style={{ margin: '0' }}>이벤트 ID: {message.sharedScheduleId}</p>
+        <button className="accept" onClick={() => handleAccept(message)}>
+          승인
+        </button>
+        <button className="reject" onClick={() => handleReject(message)}>
+          거절
+        </button>
+      </div>
       ))}
+
+      {showGroupMessages && (
+        <div>
+          {groupMessages.map((groupMessage) => (
+            <div className='group-message-box' key={groupMessage.id}>
+              <h4 style={{ margin: '0' }}>그룹 ID : {groupMessage.groupId}</h4>
+              <p style={{ margin: '0' }}>초대 코드 : {groupMessage.sharedCode}</p>
+              <p style={{ margin: '0' }}>그룹 요청 ID : {groupMessage.id}</p>
+              <button className="accept" onClick={() => handleAcceptGroup(groupMessage)}>
+                승인
+              </button>
+              <button className="reject" onClick={() => handleRejectGroup(groupMessage)}>
+                거절
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+      
     </div>
   );
 }

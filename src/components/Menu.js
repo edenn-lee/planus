@@ -237,7 +237,7 @@ useEffect(()=>{
 
   const handleInviteGroup = () => {
     
-    axios.post(`http://13.209.48.48:8080/group/accept?sharedCode=${sharedCode}`,[] ,{
+    axios.post(`http://13.209.48.48:8080/group/accept?sharedCode=${sharedCode}`,{} ,{
         headers: {
           'Authorization': 'Bearer ' + token
         },
@@ -256,17 +256,17 @@ useEffect(()=>{
       });
   };
 
-// useEffect(() => {
-//   console.log(sharedCode);
-// }
-// ,[sharedCode]) 
+
+useEffect(() => {
+  console.log(sharedCode);
+}
+,[sharedCode]) 
 
 
 
 
   return (
     <>
-
     {showDeleteModal && (
         <div id='check-delete' className="modal">
           <h2>선택 그룹 : {deleteGroup.name}</h2>
@@ -319,12 +319,6 @@ useEffect(()=>{
                       {group.name}
                     </label>
 
-                    {/* <KakaoShare
-                    isButtonDisabled={buttonDisabled} 
-                    onShare={handleShare}
-                    propss={sharedCode}/> */}
-             
-
                     {showEditGroup && (
                       <>
                         <button className="delete-button" onClick={() => checkDeleteGroupSubmit(group)}>
@@ -351,12 +345,14 @@ useEffect(()=>{
                             onChange={handleGroupNameChange}
                             style={{ width: '150px' }}
                           />
-                          <button type="submit" onClick={() => setShowAddButton(true)}>
-                            생성
-                          </button>
-                          <button type="button" onClick={handleAddGroupClick}>
-                            취소
-                          </button>
+                          <div style={{marginLeft:"0"}}>
+                            <button type="submit" onClick={() => setShowAddButton(true)}>
+                              생성
+                            </button>
+                            <button type="button" onClick={handleAddGroupClick}>
+                              취소
+                            </button>
+                          </div>
                         </form>
                       </li>
                     )}
@@ -366,19 +362,13 @@ useEffect(()=>{
             </div>
           )}
         </li>
-        
         <li>
           <NavLink exact to="/TodoList" activeClassName="active" onClick={onClose}>
             TodoList
           </NavLink>
         </li>
-
         <li><KakaoShare groups={groups} sharedCode={sharedCode} setSharedCode={setSharedCode}/>
-
-        
         </li>
-
-
         <li>
           <div className='modal-invite'>
             <button className='modal-button' onClick={openModal}>초대코드 입력</button>

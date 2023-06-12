@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate,Link } from 'react-router-dom';
 import './App.css';
 import Menu from './components/Menu';
 import MyCalendar from './components/MyCalendar';
@@ -38,6 +38,24 @@ function App() {
   const [showPersonalSchedule, setShowPersonalSchedule] = useState(true);
   const [events, setEvents] = useState([]);
   const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+  
+    if (token && user) {
+      // 토큰 및 사용자 정보가 로컬 스토리지에 저장되어 있는 경우
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // 로그인 토큰 삭제
+    localStorage.removeItem('user'); // 유저 정보 삭제
+    localStorage.removeItem('userNickname'); // 유저 닉네임 삭제
+    setIsAuthenticated(false); // 인증 상태 변경
+    
+  };
 
   const handleSetEvents = (events) => {
     setEvents(events);
@@ -110,6 +128,10 @@ function App() {
             setEvents={handleSetEvents}/>
 
           {isAuthenticated ? <p style={{fontSize:'15px'}}>user : {localStorage.getItem('userNickname')}</p> : null}
+          
+          
+          {isAuthenticated && (<Link to="/login"><button onClick={handleLogout} style={{ marginLeft: '10px' }}>로그아웃</button></Link>)}
+              
           <h1 id="planus-title">Planus</h1>
           <NotificationButton onClick={handleNotificationToggle}/>
           <Notification
